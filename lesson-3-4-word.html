@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lesson 3.4 Word Explorer | Advanced Chinese for Humanities AI</title>
+  <meta
+    name="description"
+    content="Lesson 3.4 Word Explorer for Advanced Chinese for Humanities: 成语故事二则 vocabulary system, radicals, character patterns, writing practice, and AI support."
+  />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="brand">
+        <div class="brand-badge">ACH AI</div>
+        <div>
+          <h1 class="site-title">Advanced Chinese for Humanities</h1>
+          <p class="site-subtitle">人文天下：Lesson 3.4 单课试运行</p>
+        </div>
+      </div>
+      <nav class="top-nav">
+        <a href="index.html">Home</a>
+        <a href="#concept-net">Concepts</a>
+        <a href="#patterns">Patterns</a>
+        <a href="#write-hanzi">Write</a>
+        <a href="#ai-tools">AI Box</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="page-shell">
+    <section class="lesson-hero">
+      <div class="container">
+        <div class="breadcrumb">Home → Lesson 3.4 → 成语故事二则</div>
+        <p class="eyebrow">Lesson 3.4</p>
+        <h2 class="page-title">成语故事二则</h2>
+        <p class="page-intro">
+          This lesson brings together two vivid idiom stories: <strong>天衣无缝</strong> and
+          <strong>胸有成竹</strong>. Students can learn the words through radicals, image chains,
+          and story-based memory: body movement, door-frame characters, 酉-related words, and idiom logic.
+        </p>
+        <div class="lesson-meta">
+          <span class="tag">Unit 3: 艺术人生</span>
+          <span class="tag">Theme: Idioms, Imagination, Artistic Creation</span>
+          <span class="tag">Module: Word Explorer</span>
+        </div>
+      </div>
+    </section>
+
+    <section id="concept-net" class="section alt-bg">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">Concept Net</p>
+          <h2>Hover or tap to preview key words</h2>
+        </div>
+        <div id="conceptGrid" class="group-grid"></div>
+        <div class="card name-card" style="margin-top: 1rem;">
+          <h3>Key names in this lesson</h3>
+          <div id="nameChipRow" class="concept-list"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="patterns" class="section">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">Focus on Patterns</p>
+          <h2>Learn through radicals, frames, and idiom memory</h2>
+        </div>
+        <div id="patternGrid" class="pattern-grid"></div>
+      </div>
+    </section>
+
+    <section id="write-hanzi" class="section">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">Write the Hanzi</p>
+          <h2>Read the pinyin and English, then write the Chinese characters</h2>
+        </div>
+        <div class="card vocab-card">
+          <p>
+            Type the hanzi based on the pinyin and English meaning. Click <strong>Hint</strong>
+            to open a pop-up with stroke-order animation.
+          </p>
+          <div id="hanziPracticeGrid" class="hanzi-practice-grid"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="ai-tools" class="section alt-bg">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">AI Question Box</p>
+          <h2>Ask about meaning, usage, radicals, or idiom memory</h2>
+        </div>
+        <div class="tools-layout">
+          <div class="card tool-card">
+            <h3>Ask AI about this lesson</h3>
+            <p>You can ask about vocabulary, idioms, story logic, radicals, or memory methods.</p>
+            <label for="studentQuestionInput">Your question</label>
+            <textarea id="studentQuestionInput" placeholder="Examples:
+How do I remember 天衣无缝 and 胸有成竹?
+Why are 闻名 and 电闪雷鸣 useful together?
+How should I learn 酉字旁 from 酷暑 and 配合?"></textarea>
+            <div class="tool-actions">
+              <button class="tool-btn" id="askAiBtn">Ask AI</button>
+              <button class="tool-btn secondary" id="fillExampleBtn">Use Example Question</button>
+            </div>
+            <ul class="helper-list">
+              <li>Ask one clear question at a time.</li>
+              <li>Use Chinese words when possible.</li>
+              <li>Try asking about radicals, image chains, or idiom memory.</li>
+            </ul>
+          </div>
+          <div class="card result-card">
+            <h3>AI response</h3>
+            <div class="result-meta">
+              <span class="tag">Course: humanities2</span>
+              <span class="tag">Lesson: 3-4</span>
+              <span class="tag">Task: student question</span>
+            </div>
+            <div id="resultBox" class="result-box">Ask a question to get started.</div>
+            <div class="tool-actions" style="margin-top: 1rem;">
+              <button class="tool-btn secondary" id="clearResultBtn">Clear</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="vocabulary" class="section">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">Vocabulary list</p>
+          <h2>Lesson 3.4 New Words</h2>
+        </div>
+        <div class="card vocab-card">
+          <p>This is the full vocabulary list for the lesson.</p>
+          <div class="vocab-table-wrap">
+            <table class="vocab-table">
+              <thead>
+                <tr><th>#</th><th>词语</th><th>Pinyin</th><th>POS</th><th>English</th></tr>
+              </thead>
+              <tbody id="vocabTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section alt-bg">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">Proper nouns</p>
+          <h2>Key names in Lesson 3.4</h2>
+        </div>
+        <div class="card vocab-card">
+          <div class="vocab-table-wrap">
+            <table class="vocab-table">
+              <thead>
+                <tr><th>#</th><th>专名</th><th>Pinyin</th><th>English</th></tr>
+              </thead>
+              <tbody id="properTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section alt-bg">
+      <div class="container">
+        <div class="hero-actions">
+          <a class="btn btn-secondary" href="index.html">Back to trial home</a>
+          <a class="btn btn-primary" href="#concept-net">Back to top</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div id="strokeHintModal" class="stroke-modal" aria-hidden="true">
+    <div class="stroke-modal-panel">
+      <div class="stroke-modal-top">
+        <div>
+          <h3 id="strokeModalTitle" class="stroke-modal-title">Stroke Hint</h3>
+          <p id="strokeModalSubtitle" class="stroke-modal-subtitle"></p>
+        </div>
+        <button id="closeStrokeModal" class="stroke-close-btn" type="button">×</button>
+      </div>
+      <div class="stroke-modal-actions">
+        <button id="replayStrokeBtn" class="small-btn" type="button">Replay</button>
+        <button id="closeStrokeModalBtn2" class="small-btn secondary" type="button">Close</button>
+      </div>
+      <div id="strokeAnimGrid" class="stroke-anim-grid"></div>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>Advanced Chinese for Humanities AI</p>
+      <p>Lesson 3.4 Word Explorer</p>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/hanzi-writer@3.7.0/dist/hanzi-writer.min.js"></script>
+  <script src="lesson-3-4.js"></script>
+</body>
+</html>
