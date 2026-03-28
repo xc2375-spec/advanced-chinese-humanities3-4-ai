@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lesson 3.4 Smart Reading | Advanced Chinese for Humanities AI</title>
+  <meta
+    name="description"
+    content="Smart Reading page for Lesson 3.4 成语故事二则 in Advanced Chinese for Humanities."
+  />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .page-hero {
+      padding-top: 3rem;
+      padding-bottom: 2rem;
+    }
+
+    .hero-layout {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 1.25rem;
+      align-items: start;
+    }
+
+    .hero-title {
+      font-size: clamp(2rem, 4vw, 3rem);
+      line-height: 1.1;
+      margin: 0 0 0.9rem;
+      color: var(--primary-dark);
+    }
+
+    .hero-lead {
+      font-size: 1.02rem;
+      line-height: 1.8;
+      color: var(--text);
+      margin: 0;
+    }
+
+    .hero-note {
+      margin-top: 1rem;
+      padding: 0.95rem 1rem;
+      border-radius: 16px;
+      background: #fbf6f0;
+      border: 1px solid #eadfce;
+      line-height: 1.7;
+      color: var(--text);
+    }
+
+    .how-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .mini-card h3 {
+      margin-top: 0;
+      margin-bottom: 0.45rem;
+      color: var(--primary-dark);
+      font-size: 1rem;
+    }
+
+    .mini-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .reading-layout {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 1rem;
+      align-items: start;
+    }
+
+    .reading-unit + .reading-unit {
+      margin-top: 1rem;
+    }
+
+    .reading-unit h3 {
+      margin-top: 0;
+      margin-bottom: 0.45rem;
+      color: var(--primary-dark);
+      font-size: 1.2rem;
+    }
+
+    .reading-note {
+      color: var(--muted);
+      line-height: 1.7;
+      margin-bottom: 1rem;
+    }
+
+    .audio-box {
+      margin-bottom: 1rem;
+      padding: 0.85rem 0.95rem;
+      border-radius: 14px;
+      background: #fffaf3;
+      border: 1px solid #eadfce;
+    }
+
+    .audio-box p {
+      margin: 0 0 0.5rem;
+      font-weight: 700;
+      color: var(--primary-dark);
+    }
+
+    .audio-box audio {
+      width: 100%;
+    }
+
+    .reader-text {
+      line-height: 2.2;
+      font-size: 1.1rem;
+      color: var(--text);
+    }
+
+    .reader-text p {
+      margin: 0 0 1rem;
+    }
+
+    .gloss {
+      position: relative;
+      cursor: pointer;
+      border-bottom: 2px dotted #d4b999;
+      transition: background 0.2s ease;
+      padding: 0 0.05em;
+      border-radius: 4px;
+    }
+
+    .gloss:hover,
+    .gloss.active {
+      background: #fbf2e5;
+    }
+
+    .reader-text.show-pinyin .gloss::after {
+      content: attr(data-pinyin);
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      top: -1.1em;
+      white-space: nowrap;
+      font-size: 0.72rem;
+      color: #9a6d36;
+      line-height: 1;
+      pointer-events: none;
+    }
+
+    .reading-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.7rem;
+      margin-bottom: 1rem;
+    }
+
+    .panel-card {
+      position: sticky;
+      top: 88px;
+    }
+
+    .support-card h3,
+    .question-card h3 {
+      margin-top: 0;
+      margin-bottom: 0.6rem;
+      color: var(--primary-dark);
+      font-size: 1.05rem;
+    }
+
+    .support-word {
+      font-size: 1.45rem;
+      font-weight: 700;
+      color: var(--primary-dark);
+      margin-bottom: 0.2rem;
+    }
+
+    .support-pinyin {
+      color: #9a6d36;
+      font-weight: 700;
+      margin-bottom: 0.35rem;
+    }
+
+    .support-english {
+      color: var(--text);
+      line-height: 1.6;
+      margin-bottom: 0.4rem;
+    }
+
+    .support-note {
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    .placeholder-note {
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .question-card + .question-card {
+      margin-top: 1rem;
+    }
+
+    .question-text {
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.6;
+      margin-bottom: 0.7rem;
+    }
+
+    .option-list {
+      display: grid;
+      gap: 0.55rem;
+    }
+
+    .option-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.55rem;
+      padding: 0.6rem 0.7rem;
+      border: 1px solid #eadfce;
+      border-radius: 12px;
+      background: #fffdf9;
+    }
+
+    .question-actions {
+      display: flex;
+      gap: 0.7rem;
+      flex-wrap: wrap;
+      margin-top: 0.8rem;
+    }
+
+    .feedback-box {
+      display: none;
+      margin-top: 0.85rem;
+      padding: 0.9rem 1rem;
+      border-radius: 12px;
+      border: 1px solid #eadfce;
+      background: #fffdf9;
+      line-height: 1.65;
+      white-space: pre-wrap;
+    }
+
+    .feedback-box.show {
+      display: block;
+    }
+
+    .feedback-box.correct {
+      border-color: #cdddc6;
+      background: #f7fbf5;
+    }
+
+    .feedback-box.incorrect {
+      border-color: #e4c8c1;
+      background: #fff8f6;
+    }
+
+    .reflection-box {
+      margin-top: 1rem;
+      padding: 1rem 1.05rem;
+      border-radius: 16px;
+      background: #f8f1e7;
+      border: 1px solid #eadfce;
+      line-height: 1.75;
+      color: var(--text);
+    }
+
+    @media (max-width: 960px) {
+      .hero-layout,
+      .how-grid,
+      .reading-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .panel-card {
+        position: static;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="brand">
+        <div class="brand-badge">ACH AI</div>
+        <div>
+          <h1 class="site-title">Advanced Chinese for Humanities</h1>
+          <p class="site-subtitle">Smart Reading Trial Page</p>
+        </div>
+      </div>
+
+      <nav class="top-nav">
+        <a href="index.html">Home</a>
+        <a href="word-explorer.html">Word Explorer</a>
+        <a href="smart-reading.html">Smart Reading</a>
+        <a href="reading-fluency.html">Reading Fluency</a>
+        <a href="writing-studio.html">Writing Studio</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="page-shell">
+    <section class="page-hero">
+      <div class="container">
+        <div class="hero-layout">
+          <div>
+            <p class="eyebrow">Lesson 3.4 Smart Reading</p>
+            <h2 class="hero-title">成语故事二则</h2>
+            <p class="hero-lead">
+              This page is designed to help you read two short idiom stories with support.
+              Try reading once by yourself first, then use the word support only when you need it.
+            </p>
+
+            <div class="hero-note">
+              <strong>This is a trial page.</strong><br />
+              As you read, please notice:
+              <br />
+              1. Which supports help you most?
+              <br />
+              2. What should be added to make reading easier or more useful?
+            </div>
+
+            <div class="hero-actions" style="margin-top:1rem;">
+              <a class="btn btn-secondary" href="smart-reading.html">Back to Smart Reading</a>
+              <a class="btn btn-primary" href="lesson-3-4-word.html">Go to Word Explorer</a>
+            </div>
+          </div>
+
+          <div class="card">
+            <h3 style="margin-top:0; color:var(--primary-dark);">How to use this page</h3>
+            <div class="how-grid">
+              <div class="mini-card">
+                <h3>1. Read first</h3>
+                <p>Try to read the text once without clicking every word.</p>
+              </div>
+              <div class="mini-card">
+                <h3>2. Click words</h3>
+                <p>Click or hover on key words to see pinyin, English, and a short note.</p>
+              </div>
+              <div class="mini-card">
+                <h3>3. Check meaning</h3>
+                <p>Answer the questions after reading to see what you understood.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section alt-bg">
+      <div class="container">
+        <div class="reading-layout">
+          <div>
+            <div class="reading-controls">
+              <button id="togglePinyinBtn" class="btn btn-secondary" type="button">Show Pinyin</button>
+              <button id="clearFocusBtn" class="btn btn-secondary" type="button">Clear Word Support</button>
+            </div>
+
+            <div class="card reading-unit">
+              <h3>Reading 1 · 天衣无缝</h3>
+              <div class="reading-note">
+                Read the story first. Then use the word support to notice how the idiom moved
+                from a picture in a story to a more general meaning.
+              </div>
+
+              <div class="audio-box">
+                <p>Audio · Reading 1</p>
+                <audio controls preload="none">
+                  <source src="lesson-3-4-reading1.mp3" type="audio/mpeg" />
+                  Your browser does not support the audio element.
+                </audio>
+              </div>
+
+              <div class="reader-text" id="readerText1">
+                <p>
+                  有一天，郭翰在院子里
+                  <span class="gloss" data-word="乘凉" data-pinyin="chéngliáng" data-english="to cool off in the shade" data-note="A vivid summer word. It helps create a relaxed scene at the beginning of the story.">乘凉</span>，
+                  看见一位
+                  <span class="gloss" data-word="仙人" data-pinyin="xiānrén" data-english="celestial being" data-note="This tells readers that the story belongs to a legendary or supernatural world.">仙人</span>
+                  从天上下来。她的衣服非常美，可是奇怪的是，衣服上竟然没有一点儿
+                  <span class="gloss" data-word="缝" data-pinyin="fèng" data-english="seam, crack" data-note="This is the key image in 天衣无缝. If there is no seam, there is no visible flaw.">缝</span>。
+                  郭翰很惊讶，就问她为什么。
+                </p>
+
+                <p>
+                  仙人笑着说：“这是天衣，本来就
+                  <span class="gloss" data-word="无缝" data-pinyin="wú fèng" data-english="without seam" data-note="The literal image of the idiom: heavenly clothes with no seam at all.">无缝</span>。”
+                  后来，人们就用
+                  <span class="gloss" data-word="天衣无缝" data-pinyin="tiān yī wú fèng" data-english="flawless, perfect, without a weak point" data-note="Now the idiom is often used figuratively for writing, planning, speaking, performance, or logic that has no obvious flaw.">天衣无缝</span>
+                  来形容文章、计划或者表演非常
+                  <span class="gloss" data-word="周密" data-pinyin="zhōumì" data-english="thorough, careful" data-note="A strong modern extension word. When something is 周密, it is carefully planned and complete.">周密</span>，
+                  没有
+                  <span class="gloss" data-word="破绽" data-pinyin="pòzhàn" data-english="flaw, weak point, opening" data-note="A very useful modern word for a hidden weakness in speech, logic, or action.">破绽</span>。
+                </p>
+              </div>
+            </div>
+
+            <div class="card reading-unit">
+              <h3>Reading 2 · 胸有成竹</h3>
+              <div class="reading-note">
+                This story shows how observation and preparation lead to confidence in action.
+              </div>
+
+              <div class="audio-box">
+                <p>Audio · Reading 2</p>
+                <audio controls preload="none">
+                  <source src="lesson-3-4-reading2.mp3" type="audio/mpeg" />
+                  Your browser does not support the audio element.
+                </audio>
+              </div>
+
+              <div class="reader-text" id="readerText2">
+                <p>
+                  宋代画家文与可很会画竹子。他平时常常观察竹子的
+                  <span class="gloss" data-word="形态" data-pinyin="xíngtài" data-english="form, shape, pattern" data-note="A useful visual word for appearance and structure in art.">形态</span>，
+                  也会在心里一遍一遍地想竹叶和竹枝的样子。等到真正拿起笔来画的时候，他已经
+                  <span class="gloss" data-word="全神贯注" data-pinyin="quánshén-guànzhù" data-english="to concentrate fully" data-note="This phrase describes complete focus and mental attention.">全神贯注</span>，
+                  而且心里非常清楚。
+                </p>
+
+                <p>
+                  因为他画以前已经反复观察、思考，所以他对整幅画很有
+                  <span class="gloss" data-word="把握" data-pinyin="bǎwò" data-english="confidence; to grasp firmly" data-note="Here it means having certainty and control before acting.">把握</span>。
+                  画出来的竹子总是
+                  <span class="gloss" data-word="栩栩如生" data-pinyin="xǔxǔ rú shēng" data-english="lifelike, vividly alive" data-note="A classic expression for art that feels alive and true to life.">栩栩如生</span>。
+                  后来，人们就用
+                  <span class="gloss" data-word="胸有成竹" data-pinyin="xiōng yǒu chéng zhú" data-english="to have a clear plan before acting" data-note="Literally, the bamboo is already complete in one's chest before painting. Figuratively, it means being prepared and confident before doing something.">胸有成竹</span>
+                  来形容做事以前已经有了计划，心里很清楚，不会慌乱。
+                </p>
+              </div>
+            </div>
+
+            <div class="reflection-box">
+              <strong>After reading:</strong><br />
+              Which kind of support helped you most on this page?
+              The clickable words, the pinyin, the short notes, or the questions?
+            </div>
+          </div>
+
+          <div class="panel-card">
+            <div class="card support-card">
+              <h3>Word support</h3>
+              <div id="supportPanel">
+                <div class="placeholder-note">
+                  Click or hover on a highlighted word in the text.
+                  You will see the pinyin, English meaning, and a short reading note here.
+                </div>
+              </div>
+            </div>
+
+            <div class="card question-card">
+              <h3>Question 1</h3>
+              <div class="question-text">
+                In modern Chinese, “天衣无缝” usually means:
+              </div>
+              <div class="option-list">
+                <label class="option-item"><input type="radio" name="q1" value="A" /> A. a person is wearing old clothes</label>
+                <label class="option-item"><input type="radio" name="q1" value="B" /> B. something is careful and flawless</label>
+                <label class="option-item"><input type="radio" name="q1" value="C" /> C. the weather is very hot</label>
+                <label class="option-item"><input type="radio" name="q1" value="D" /> D. a story is very sad</label>
+              </div>
+              <div class="question-actions">
+                <button class="small-btn" onclick="checkReadingQuestion('q1','B',`Correct. 天衣无缝 now usually means something is so careful, smooth, or complete that it has no visible flaw or weak point.`)">Check</button>
+                <button class="small-btn secondary" onclick="resetReadingQuestion('q1')">Reset</button>
+              </div>
+              <div id="feedback-q1" class="feedback-box"></div>
+            </div>
+
+            <div class="card question-card">
+              <h3>Question 2</h3>
+              <div class="question-text">
+                Why could 文与可 paint bamboo so well?
+              </div>
+              <div class="option-list">
+                <label class="option-item"><input type="radio" name="q2" value="A" /> A. He copied other people without thinking</label>
+                <label class="option-item"><input type="radio" name="q2" value="B" /> B. He did not look at bamboo before painting</label>
+                <label class="option-item"><input type="radio" name="q2" value="C" /> C. He observed and planned before painting</label>
+                <label class="option-item"><input type="radio" name="q2" value="D" /> D. He only painted very quickly</label>
+              </div>
+              <div class="question-actions">
+                <button class="small-btn" onclick="checkReadingQuestion('q2','C',`Correct. 胸有成竹 comes from careful observation and mental preparation before action. He already knew what he wanted to paint.`)">Check</button>
+                <button class="small-btn secondary" onclick="resetReadingQuestion('q2')">Reset</button>
+              </div>
+              <div id="feedback-q2" class="feedback-box"></div>
+            </div>
+
+            <div class="card question-card">
+              <h3>Question 3</h3>
+              <div class="question-text">
+                Which phrase best describes someone who already has a clear plan before starting?
+              </div>
+              <div class="option-list">
+                <label class="option-item"><input type="radio" name="q3" value="A" /> A. 胸有成竹</label>
+                <label class="option-item"><input type="radio" name="q3" value="B" /> B. 乘凉</label>
+                <label class="option-item"><input type="radio" name="q3" value="C" /> C. 破绽</label>
+                <label class="option-item"><input type="radio" name="q3" value="D" /> D. 院子</label>
+              </div>
+              <div class="question-actions">
+                <button class="small-btn" onclick="checkReadingQuestion('q3','A',`Correct. 胸有成竹 is exactly the phrase for being prepared, clear, and confident before you begin.`)">Check</button>
+                <button class="small-btn secondary" onclick="resetReadingQuestion('q3')">Reset</button>
+              </div>
+              <div id="feedback-q3" class="feedback-box"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>Advanced Chinese for Humanities AI</p>
+      <p>Lesson 3.4 Smart Reading trial page</p>
+    </div>
+  </footer>
+
+  <script>
+    const supportPanel = document.getElementById("supportPanel");
+    const glosses = document.querySelectorAll(".gloss");
+    const readerTexts = document.querySelectorAll(".reader-text");
+    const togglePinyinBtn = document.getElementById("togglePinyinBtn");
+    const clearFocusBtn = document.getElementById("clearFocusBtn");
+
+    let pinyinVisible = false;
+
+    function renderSupport(wordEl) {
+      const word = wordEl.dataset.word;
+      const pinyin = wordEl.dataset.pinyin;
+      const english = wordEl.dataset.english;
+      const note = wordEl.dataset.note;
+
+      supportPanel.innerHTML = `
+        <div class="support-word">${word}</div>
+        <div class="support-pinyin">${pinyin}</div>
+        <div class="support-english">${english}</div>
+        <div class="support-note">${note}</div>
+      `;
+    }
+
+    function clearActiveGloss() {
+      glosses.forEach(el => el.classList.remove("active"));
+    }
+
+    glosses.forEach(gloss => {
+      gloss.addEventListener("mouseenter", () => {
+        if (window.innerWidth > 768) {
+          clearActiveGloss();
+          gloss.classList.add("active");
+          renderSupport(gloss);
+        }
+      });
+
+      gloss.addEventListener("click", (e) => {
+        e.stopPropagation();
+        clearActiveGloss();
+        gloss.classList.add("active");
+        renderSupport(gloss);
+      });
+    });
+
+    document.addEventListener("click", () => {
+      clearActiveGloss();
+      supportPanel.innerHTML = `
+        <div class="placeholder-note">
+          Click or hover on a highlighted word in the text.
+          You will see the pinyin, English meaning, and a short reading note here.
+        </div>
+      `;
+    });
+
+    togglePinyinBtn.addEventListener("click", () => {
+      pinyinVisible = !pinyinVisible;
+      readerTexts.forEach(text => {
+        text.classList.toggle("show-pinyin", pinyinVisible);
+      });
+      togglePinyinBtn.textContent = pinyinVisible ? "Hide Pinyin" : "Show Pinyin";
+    });
+
+    clearFocusBtn.addEventListener("click", () => {
+      clearActiveGloss();
+      supportPanel.innerHTML = `
+        <div class="placeholder-note">
+          Click or hover on a highlighted word in the text.
+          You will see the pinyin, English meaning, and a short reading note here.
+        </div>
+      `;
+    });
+
+    function checkReadingQuestion(questionName, correctAnswer, correctFeedback) {
+      const selected = document.querySelector(`input[name="${questionName}"]:checked`);
+      const feedbackBox = document.getElementById(`feedback-${questionName}`);
+
+      if (!selected) {
+        feedbackBox.className = "feedback-box show incorrect";
+        feedbackBox.textContent = "Please choose an answer first.";
+        return;
+      }
+
+      if (selected.value === correctAnswer) {
+        feedbackBox.className = "feedback-box show correct";
+        feedbackBox.textContent = correctFeedback;
+      } else {
+        let message = "";
+        if (questionName === "q1") {
+          message = "Not quite. 天衣无缝 usually means something is carefully made, smooth, and without flaws.";
+        } else if (questionName === "q2") {
+          message = "Not quite. The story shows that 文与可 observed, thought, and prepared before he painted.";
+        } else if (questionName === "q3") {
+          message = "Not quite. 胸有成竹 is the phrase for already having a clear plan before starting.";
+        }
+        feedbackBox.className = "feedback-box show incorrect";
+        feedbackBox.textContent = message;
+      }
+    }
+
+    function resetReadingQuestion(questionName) {
+      document.querySelectorAll(`input[name="${questionName}"]`).forEach(input => {
+        input.checked = false;
+      });
+      const feedbackBox = document.getElementById(`feedback-${questionName}`);
+      feedbackBox.className = "feedback-box";
+      feedbackBox.textContent = "";
+    }
+  </script>
+</body>
+</html>
