@@ -3,9 +3,166 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Lesson 3.4 Trial | Advanced Chinese for Humanities AI</title>
-  <meta name="description" content="Single-lesson trial website for Lesson 3.4 成语故事二则 with AI support and Supabase logging." />
+  <title>Advanced Chinese for Humanities AI | Lesson Trial Site</title>
+  <meta
+    name="description"
+    content="A student-facing trial site for Advanced Chinese for Humanities, with Word Explorer, Smart Reading, Reading Fluency, and Writing Studio."
+  />
   <link rel="stylesheet" href="style.css" />
+  <style>
+    .home-hero {
+      padding-top: 3rem;
+      padding-bottom: 2rem;
+    }
+
+    .home-layout {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 1.25rem;
+      align-items: start;
+    }
+
+    .home-title {
+      font-size: clamp(2rem, 4vw, 3rem);
+      line-height: 1.1;
+      margin: 0 0 0.9rem;
+      color: var(--primary-dark);
+    }
+
+    .home-lead {
+      font-size: 1.02rem;
+      line-height: 1.8;
+      color: var(--text);
+      margin: 0;
+    }
+
+    .trial-note {
+      margin-top: 1rem;
+      padding: 0.95rem 1rem;
+      border-radius: 16px;
+      background: #fbf6f0;
+      border: 1px solid #eadfce;
+      line-height: 1.7;
+      color: var(--text);
+    }
+
+    .quick-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-top: 1.1rem;
+    }
+
+    .feedback-card {
+      height: 100%;
+    }
+
+    .feedback-card h3 {
+      margin-top: 0;
+      margin-bottom: 0.7rem;
+      color: var(--primary-dark);
+    }
+
+    .feedback-list {
+      margin: 0.7rem 0 0;
+      padding-left: 1.2rem;
+      color: var(--muted);
+      line-height: 1.8;
+    }
+
+    .feedback-box {
+      margin-top: 1rem;
+      padding: 0.95rem 1rem;
+      border-radius: 14px;
+      background: #fffdf9;
+      border: 1px solid #eadfce;
+      color: var(--text);
+      line-height: 1.7;
+    }
+
+    .module-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1rem;
+      margin-top: 1.2rem;
+    }
+
+    .module-card {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      min-height: 220px;
+    }
+
+    .module-card h3 {
+      margin: 0;
+      color: var(--primary-dark);
+      font-size: 1.15rem;
+    }
+
+    .module-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .module-badge {
+      display: inline-flex;
+      width: fit-content;
+      padding: 0.38rem 0.72rem;
+      border-radius: 999px;
+      background: #f4e7d6;
+      color: var(--primary-dark);
+      font-size: 0.84rem;
+      font-weight: 700;
+      border: 1px solid #e5d4bf;
+    }
+
+    .module-actions {
+      margin-top: auto;
+      display: flex;
+      gap: 0.7rem;
+      flex-wrap: wrap;
+    }
+
+    .student-note {
+      margin-top: 1.1rem;
+      padding: 1rem 1.05rem;
+      border-radius: 16px;
+      background: #f8f1e7;
+      border: 1px solid #eadfce;
+      line-height: 1.75;
+      color: var(--text);
+    }
+
+    .mini-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1rem;
+      margin-top: 1.1rem;
+    }
+
+    .mini-card h3 {
+      margin-top: 0;
+      margin-bottom: 0.45rem;
+      color: var(--primary-dark);
+      font-size: 1rem;
+    }
+
+    .mini-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    @media (max-width: 960px) {
+      .home-layout,
+      .module-grid,
+      .mini-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
 </head>
 <body>
   <header class="site-header">
@@ -14,91 +171,168 @@
         <div class="brand-badge">ACH AI</div>
         <div>
           <h1 class="site-title">Advanced Chinese for Humanities</h1>
-          <p class="site-subtitle">3.4 单课试运行站点</p>
+          <p class="site-subtitle">Trial Student Support Site</p>
         </div>
       </div>
+
       <nav class="top-nav">
-        <a href="#about">About</a>
-        <a href="#modules">Modules</a>
-        <a href="lesson-3-4-word.html">Open Lesson</a>
+        <a href="index.html">Home</a>
+        <a href="word-explorer.html">Word Explorer</a>
+        <a href="smart-reading.html">Smart Reading</a>
+        <a href="reading-fluency.html">Reading Fluency</a>
+        <a href="writing-studio.html">Writing Studio</a>
       </nav>
     </div>
   </header>
 
-  <main>
-    <section class="hero">
-      <div class="container hero-inner">
-        <div class="hero-text">
-          <p class="eyebrow">Single-lesson trial</p>
-          <h2>Start with Lesson 3.4 — 成语故事二则</h2>
-          <p class="hero-description">
-            This trial site focuses on one lesson only. Students can explore concept networks,
-            pattern learning, AI Q&amp;A, hanzi-writing prompts, and stroke hints in one clean flow.
-          </p>
-          <div class="hero-actions">
-            <a class="btn btn-primary" href="lesson-3-4-word.html">Open Lesson 3.4</a>
-            <a class="btn btn-secondary" href="#modules">See trial modules</a>
+  <main class="page-shell">
+    <section class="home-hero">
+      <div class="container">
+        <div class="home-layout">
+          <div>
+            <p class="eyebrow">Welcome</p>
+            <h2 class="home-title">A trial site to support your Chinese learning</h2>
+            <p class="home-lead">
+              This website is a small trial version designed to support your learning in this course.
+              We hope it can help you study vocabulary, reading, fluency, and writing in a clearer
+              and more interactive way.
+            </p>
+
+            <div class="trial-note">
+              <strong>Your feedback matters.</strong>  
+              As you use this site, please think about two questions:
+              <br />
+              1. <strong>What is helpful for your learning?</strong>
+              <br />
+              2. <strong>What else should be added?</strong>
+            </div>
+
+            <div class="quick-tags">
+              <span class="tag">student-facing</span>
+              <span class="tag">trial version</span>
+              <span class="tag">please give feedback</span>
+            </div>
           </div>
-        </div>
-        <div class="hero-card">
-          <h3>What is included in this trial</h3>
-          <ul>
-            <li>Concept Net</li>
-            <li>Pattern discovery</li>
-            <li>Write the Hanzi</li>
-            <li>AI Question Box</li>
-            <li>Supabase event logging</li>
-          </ul>
+
+          <div class="card feedback-card">
+            <h3>What we want to learn from you</h3>
+            <p class="home-lead" style="font-size:0.98rem;">
+              This site is still developing. Your experience will help improve it.
+            </p>
+
+            <ul class="feedback-list">
+              <li>Which activities help you understand vocabulary better?</li>
+              <li>Which reading supports are most useful?</li>
+              <li>Does fluency practice feel clear and manageable?</li>
+              <li>What kind of writing help do you still need?</li>
+              <li>What should we add next?</li>
+            </ul>
+
+            <div class="feedback-box">
+              You can share feedback in class, by message, or through a course feedback form.
+              Even short comments are useful.
+            </div>
+          </div>
         </div>
       </div>
     </section>
 
-    <section id="about" class="section">
+    <section class="section alt-bg">
       <div class="container">
         <div class="section-heading">
-          <p class="eyebrow">About</p>
-          <h2>Why start with a single-lesson trial</h2>
+          <p class="eyebrow">Core Modules</p>
+          <h2>Four main learning tools</h2>
         </div>
-        <div class="about-grid">
-          <div class="about-card">
-            <h3>Low-risk deployment</h3>
-            <p>One lesson is the fastest way to verify GitHub, Cloudflare, AI calls, and Supabase logging together.</p>
-          </div>
-          <div class="about-card">
-            <h3>Easy debugging</h3>
-            <p>You only need to test one content path, one lesson page, one AI flow, and one storage pipeline.</p>
-          </div>
-          <div class="about-card">
-            <h3>Ready to scale</h3>
-            <p>Once 3.4 is stable, you can clone this structure to 4.0, 4.1, 4.2, and the rest of the volume.</p>
-          </div>
-        </div>
-      </div>
-    </section>
 
-    <section id="modules" class="section alt-bg">
-      <div class="container">
-        <div class="section-heading">
-          <p class="eyebrow">Trial modules</p>
-          <h2>What students will actually use</h2>
-        </div>
         <div class="module-grid">
-          <a class="module-card" href="lesson-3-4-word.html#concept-net">
-            <h3>Concept Net</h3>
-            <p>Preview words as connected ideas rather than memorizing a flat list.</p>
-          </a>
-          <a class="module-card" href="lesson-3-4-word.html#patterns">
-            <h3>Pattern Learning</h3>
-            <p>Use radicals, images, and idiom logic to make vocabulary more memorable.</p>
-          </a>
-          <a class="module-card" href="lesson-3-4-word.html#write-hanzi">
-            <h3>Write the Hanzi</h3>
-            <p>Practice writing from pinyin and English, with stroke-order hints when needed.</p>
-          </a>
-          <a class="module-card" href="lesson-3-4-word.html#ai-tools">
-            <h3>AI Question Box</h3>
-            <p>Ask for help with meaning, comparison, structure, and idiom memory.</p>
-          </a>
+          <div class="card module-card">
+            <span class="module-badge">Module 1</span>
+            <h3>Word Explorer</h3>
+            <p>
+              Learn vocabulary through meaning groups, character patterns, radicals, example words,
+              and guided support. This section is designed to help you notice how words connect.
+            </p>
+            <div class="module-actions">
+              <a class="btn btn-primary" href="word-explorer.html">Open</a>
+            </div>
+          </div>
+
+          <div class="card module-card">
+            <span class="module-badge">Module 2</span>
+            <h3>Smart Reading</h3>
+            <p>
+              Read with built-in support. You can explore texts more easily and get help with
+              vocabulary, structure, and understanding while reading.
+            </p>
+            <div class="module-actions">
+              <a class="btn btn-primary" href="smart-reading.html">Open</a>
+            </div>
+          </div>
+
+          <div class="card module-card">
+            <span class="module-badge">Module 3</span>
+            <h3>Reading Fluency</h3>
+            <p>
+              Practice reading more smoothly and confidently. This module is meant to help you
+              build rhythm, accuracy, and comfort with the language.
+            </p>
+            <div class="module-actions">
+              <a class="btn btn-primary" href="reading-fluency.html">Open</a>
+            </div>
+          </div>
+
+          <div class="card module-card">
+            <span class="module-badge">Module 4</span>
+            <h3>Writing Studio</h3>
+            <p>
+              Get support for drafting, revising, and improving your written Chinese.
+              This section is meant to help you organize ideas and express yourself more clearly.
+            </p>
+            <div class="module-actions">
+              <a class="btn btn-primary" href="writing-studio.html">Open</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="student-note">
+          <strong>Please use the site as a learning tool, not just an answer tool.</strong>
+          The goal is to help you notice patterns, practice more effectively, and become a more confident learner.
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">As you explore</p>
+          <h2>Please pay attention to your experience</h2>
+        </div>
+
+        <div class="mini-grid">
+          <div class="card mini-card">
+            <h3>Helpful</h3>
+            <p>
+              Which page or feature helps you the most when you study on your own?
+            </p>
+          </div>
+
+          <div class="card mini-card">
+            <h3>Unclear</h3>
+            <p>
+              Which part feels confusing, too limited, or not yet useful enough?
+            </p>
+          </div>
+
+          <div class="card mini-card">
+            <h3>Next step</h3>
+            <p>
+              What would you like us to add next to better support your learning?
+            </p>
+          </div>
+        </div>
+
+        <div class="hero-actions" style="margin-top: 1.25rem;">
+          <a class="btn btn-secondary" href="word-explorer.html">Start with Word Explorer</a>
         </div>
       </div>
     </section>
@@ -107,7 +341,7 @@
   <footer class="site-footer">
     <div class="container footer-inner">
       <p>Advanced Chinese for Humanities AI</p>
-      <p>3.4 单课试运行</p>
+      <p>Trial site for student learning support</p>
     </div>
   </footer>
 </body>
