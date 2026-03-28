@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Smart Reading | Advanced Chinese for Humanities AI</title>
+  <meta
+    name="description"
+    content="Smart Reading for Advanced Chinese for Humanities: student-friendly reading support with guided texts and feedback."
+  />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .page-hero {
+      padding-top: 3rem;
+      padding-bottom: 2rem;
+    }
+
+    .hero-layout {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 1.25rem;
+      align-items: start;
+    }
+
+    .hero-title {
+      font-size: clamp(2rem, 4vw, 3rem);
+      line-height: 1.1;
+      margin: 0 0 0.9rem;
+      color: var(--primary-dark);
+    }
+
+    .hero-lead {
+      font-size: 1.02rem;
+      line-height: 1.8;
+      color: var(--text);
+      margin: 0;
+    }
+
+    .hero-note {
+      margin-top: 1rem;
+      padding: 0.95rem 1rem;
+      border-radius: 16px;
+      background: #fbf6f0;
+      border: 1px solid #eadfce;
+      line-height: 1.7;
+      color: var(--text);
+    }
+
+    .feature-list {
+      margin: 0.8rem 0 0;
+      padding-left: 1.15rem;
+      color: var(--muted);
+      line-height: 1.8;
+    }
+
+    .reading-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1rem;
+      margin-top: 1.2rem;
+    }
+
+    .reading-card {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      min-height: 235px;
+    }
+
+    .reading-card h3 {
+      margin: 0;
+      color: var(--primary-dark);
+      font-size: 1.15rem;
+    }
+
+    .reading-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .reading-badge {
+      display: inline-flex;
+      width: fit-content;
+      padding: 0.38rem 0.72rem;
+      border-radius: 999px;
+      background: #f4e7d6;
+      color: var(--primary-dark);
+      font-size: 0.84rem;
+      font-weight: 700;
+      border: 1px solid #e5d4bf;
+    }
+
+    .status-tag {
+      display: inline-flex;
+      width: fit-content;
+      padding: 0.32rem 0.68rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      border: 1px solid #e5d4bf;
+      background: #fff8ef;
+      color: var(--primary-dark);
+    }
+
+    .status-tag.active {
+      background: #eef7ee;
+      border-color: #cfe0cf;
+      color: #2f6b39;
+    }
+
+    .reading-actions {
+      margin-top: auto;
+      display: flex;
+      gap: 0.7rem;
+      flex-wrap: wrap;
+    }
+
+    .feedback-box {
+      margin-top: 1.1rem;
+      padding: 1rem 1.05rem;
+      border-radius: 16px;
+      background: #f8f1e7;
+      border: 1px solid #eadfce;
+      line-height: 1.75;
+      color: var(--text);
+    }
+
+    .mini-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1rem;
+      margin-top: 1.1rem;
+    }
+
+    .mini-card h3 {
+      margin-top: 0;
+      margin-bottom: 0.45rem;
+      color: var(--primary-dark);
+      font-size: 1rem;
+    }
+
+    .mini-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    @media (max-width: 960px) {
+      .hero-layout,
+      .reading-grid,
+      .mini-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="brand">
+        <div class="brand-badge">ACH AI</div>
+        <div>
+          <h1 class="site-title">Advanced Chinese for Humanities</h1>
+          <p class="site-subtitle">Trial Student Support Site</p>
+        </div>
+      </div>
+
+      <nav class="top-nav">
+        <a href="index.html">Home</a>
+        <a href="word-explorer.html">Word Explorer</a>
+        <a href="smart-reading.html">Smart Reading</a>
+        <a href="reading-fluency.html">Reading Fluency</a>
+        <a href="writing-studio.html">Writing Studio</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="page-shell">
+    <section class="page-hero">
+      <div class="container">
+        <div class="hero-layout">
+          <div>
+            <p class="eyebrow">Smart Reading</p>
+            <h2 class="hero-title">Read with support, not alone</h2>
+            <p class="hero-lead">
+              This section is designed to help you read more confidently.
+              You can use guided reading pages to understand texts more clearly,
+              notice important words and structures, and build stronger reading habits.
+            </p>
+
+            <div class="hero-note">
+              <strong>This is still a trial version.</strong><br />
+              As you use these reading pages, please think about:
+              <br />
+              1. Which supports help you the most?
+              <br />
+              2. What kinds of help are still missing?
+            </div>
+          </div>
+
+          <div class="card">
+            <h3 style="margin-top:0; color:var(--primary-dark);">What Smart Reading is for</h3>
+            <ul class="feature-list">
+              <li>Reading with support instead of reading alone</li>
+              <li>Understanding text more clearly</li>
+              <li>Noticing vocabulary and structure while reading</li>
+              <li>Building confidence step by step</li>
+              <li>Helping us learn what students still need</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section alt-bg">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">Reading Pages</p>
+          <h2>Available and upcoming lessons</h2>
+        </div>
+
+        <div class="reading-grid">
+          <div class="card reading-card">
+            <span class="reading-badge">Lesson 3.4</span>
+            <span class="status-tag active">Available</span>
+            <h3>成语故事二则</h3>
+            <p>
+              A trial smart reading page connected to Lesson 3.4.
+              Students can use this reading page to explore the text with more support.
+            </p>
+            <div class="reading-actions">
+              <a class="btn btn-primary" href="lesson-3-4-reading.html">Open Reading</a>
+            </div>
+          </div>
+
+          <div class="card reading-card">
+            <span class="reading-badge">Lesson 4.0</span>
+            <span class="status-tag">Coming soon</span>
+            <h3>中国女性的社会地位</h3>
+            <p>
+              This reading page will be added next. It will help students work through
+              the lesson text with guided support.
+            </p>
+            <div class="reading-actions">
+              <a class="btn btn-secondary" href="javascript:void(0)">Coming soon</a>
+            </div>
+          </div>
+
+          <div class="card reading-card">
+            <span class="reading-badge">Lesson 4.1</span>
+            <span class="status-tag">Coming soon</span>
+            <h3>梁山伯与祝英台</h3>
+            <p>
+              This reading page will support students as they read the story
+              and notice key language and ideas.
+            </p>
+            <div class="reading-actions">
+              <a class="btn btn-secondary" href="javascript:void(0)">Coming soon</a>
+            </div>
+          </div>
+
+          <div class="card reading-card">
+            <span class="reading-badge">Lesson 4.2</span>
+            <span class="status-tag">Coming soon</span>
+            <h3>武则天</h3>
+            <p>
+              This page will be added in the next stage of the trial site.
+              It will focus on supported reading and comprehension.
+            </p>
+            <div class="reading-actions">
+              <a class="btn btn-secondary" href="javascript:void(0)">Coming soon</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="feedback-box">
+          <strong>Student feedback is especially helpful here.</strong><br />
+          When you use a Smart Reading page, please think about:
+          Is the reading support clear? What helps you most? What would make reading easier or more useful?
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">As you read</p>
+          <h2>Please notice your experience</h2>
+        </div>
+
+        <div class="mini-grid">
+          <div class="card mini-card">
+            <h3>Helpful</h3>
+            <p>
+              Which support helps you understand the reading best?
+            </p>
+          </div>
+
+          <div class="card mini-card">
+            <h3>Difficult</h3>
+            <p>
+              Which part of the reading still feels confusing or unsupported?
+            </p>
+          </div>
+
+          <div class="card mini-card">
+            <h3>Needed next</h3>
+            <p>
+              What should we add to make Smart Reading more useful for you?
+            </p>
+          </div>
+        </div>
+
+        <div class="hero-actions" style="margin-top: 1.25rem;">
+          <a class="btn btn-secondary" href="index.html">Back Home</a>
+          <a class="btn btn-primary" href="lesson-3-4-reading.html">Go to Lesson 3.4</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>Advanced Chinese for Humanities AI</p>
+      <p>Smart Reading trial page</p>
+    </div>
+  </footer>
+</body>
+</html>
