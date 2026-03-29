@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Reading Fluency | 3.4 成语故事二则</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <style>
+    :root{
+      --bg:#f7f7f5;
+      --card:#ffffff;
+      --line:#e8e4dc;
+      --text:#2a2a2a;
+      --muted:#6f6f6f;
+      --accent:#d28a2d;
+      --accent-soft:#fbf3e6;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:"PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--text)}
+    a{text-decoration:none;color:inherit}
+    button,select,input,textarea{font:inherit}
+    .wrap{max-width:960px;margin:0 auto;padding:20px 16px 44px}
+    .topbar{display:flex;align-items:center;gap:10px;margin-bottom:14px;font-size:14px;color:var(--muted)}
+    .topbar a{color:var(--muted)}
+    .box{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:14px}
+    .title h1{margin:0 0 6px;font-size:22px;color:#b56e11}
+    .title p{margin:0;font-size:14px;line-height:1.7;color:var(--muted)}
+    .row{display:grid;grid-template-columns:1fr 180px;gap:12px}
+    @media(max-width:700px){.row{grid-template-columns:1fr}}
+    label{display:block;font-size:12px;color:var(--muted);margin-bottom:6px;font-weight:700}
+    select,input,textarea{width:100%;padding:10px 12px;border:1px solid #d9d4ca;border-radius:10px;background:#fff;outline:none}
+    textarea{min-height:96px;resize:vertical}
+    .btns{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
+    button{border:none;border-radius:10px;padding:10px 14px;cursor:pointer;font-weight:700}
+    .primary{background:var(--accent);color:#fff}
+    .secondary{background:#f3f1ec;color:#333;border:1px solid var(--line)}
+    button:disabled{opacity:.55;cursor:not-allowed}
+    .status{margin-top:12px;padding:10px 12px;border-radius:10px;background:var(--accent-soft);font-size:14px;line-height:1.6;color:#6b4d20}
+    .conversation-title{font-size:18px;font-weight:700;margin:0 0 4px}
+    .scene{font-size:13px;color:var(--muted);margin-bottom:12px}
+    .section-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:18px 0 10px}
+    .section-head h3{margin:0;font-size:15px;color:#8b5c18}
+    .section-head span{font-size:12px;color:var(--muted)}
+    .line-list{display:flex;flex-direction:column;gap:10px}
+    .line{border:1px solid var(--line);border-radius:12px;padding:12px;background:#fff;cursor:pointer}
+    .line.active{border-color:var(--accent);background:#fffaf1}
+    .meta{display:flex;justify-content:space-between;gap:8px;align-items:center;margin-bottom:8px}
+    .num{font-size:12px;color:#a26d20;font-weight:700}
+    .speaker{font-size:12px;color:var(--muted)}
+    .en{font-size:14px;line-height:1.65;color:#444;margin-bottom:6px}
+    .zh{font-size:22px;line-height:1.7}
+    .feedback-title{font-size:16px;font-weight:700;margin:0 0 4px}
+    .small{font-size:12px;color:var(--muted)}
+    .feedback-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    @media(max-width:700px){.feedback-grid{grid-template-columns:1fr}}
+    .radio-row{display:flex;gap:12px;flex-wrap:wrap;padding-top:4px}
+    .radio-row label{display:flex;align-items:center;gap:6px;font-weight:500;margin:0;color:var(--text)}
+    .result{display:none;margin-top:10px;padding:10px 12px;border-radius:10px;font-size:14px}
+    .result.show{display:block}
+    .success{background:#eef8ef;color:#25623b;border:1px solid #c7e4cc}
+    .error{background:#fff1f1;color:#8c2e2e;border:1px solid #efc3c3}
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <div class="topbar"><a href="index.html">← 首页</a><span>/</span><span>Reading Fluency</span></div>
+
+    <section class="box title">
+      <h1>3.4 成语故事二则</h1>
+      <p>Listen to the English once, then shadow the Chinese twice. Click any line to start from there.</p>
+    </section>
+
+    <section class="box">
+      <div class="row">
+        <div>
+          <label for="conversation-select">选择内容</label>
+          <select id="conversation-select">
+            <option value="a">A · 天衣无缝</option>
+            <option value="b">B · 胸有成竹</option>
+          </select>
+        </div>
+        <div>
+          <label for="speed-select">速度</label>
+          <select id="speed-select">
+            <option value="slow">慢速</option>
+            <option value="natural" selected>自然</option>
+            <option value="fast">稍快</option>
+          </select>
+        </div>
+      </div>
+      <div class="btns">
+        <button class="primary" id="play-all-btn">▶ 播放整段</button>
+        <button class="secondary" id="play-one-btn">▸ 播放当前句</button>
+        <button class="secondary" id="prev-btn">← 上一句</button>
+        <button class="secondary" id="next-btn">下一句 →</button>
+        <button class="secondary" id="stop-btn">■ 停止</button>
+      </div>
+      <div class="status" id="status-box">Ready.</div>
+    </section>
+
+    <section class="box">
+      <div class="conversation-title" id="conversation-title"></div>
+      <div class="scene" id="scene"></div>
+
+      <div class="section-head">
+        <h3>Main Conversation</h3>
+        <span>Click a line to practice from there</span>
+      </div>
+      <div class="line-list" id="main-line-list"></div>
+
+      <div class="section-head">
+        <h3>Bonus Practice</h3>
+        <span>Extra lines with the key idiom</span>
+      </div>
+      <div class="line-list" id="extension-line-list"></div>
+    </section>
+
+    <section class="box">
+      <div class="feedback-title">Student Feedback</div>
+      <div class="small" style="margin-bottom:12px">Please answer in English so the feedback is easier to review later.</div>
+
+      <div class="feedback-grid">
+        <div>
+          <label for="student-name">Name (optional)</label>
+          <input id="student-name" type="text" placeholder="e.g. Ming / 张明" />
+        </div>
+        <div>
+          <label for="pace-rating">How was the pace?</label>
+          <select id="pace-rating">
+            <option value="">Select</option>
+            <option value="2">A little fast</option>
+            <option value="3">Just right</option>
+            <option value="4">A little slow</option>
+          </select>
+        </div>
+      </div>
+
+      <div style="margin-top:12px">
+        <label>Was English-first helpful?</label>
+        <div class="radio-row">
+          <label><input type="radio" name="english_helpful" value="Yes"> Yes</label>
+          <label><input type="radio" name="english_helpful" value="A little"> A little</label>
+          <label><input type="radio" name="english_helpful" value="No"> No</label>
+        </div>
+      </div>
+
+      <div style="margin-top:12px">
+        <label>Which part was most helpful?</label>
+        <div class="radio-row">
+          <label><input type="radio" name="most_helpful" value="Main conversation"> Main conversation</label>
+          <label><input type="radio" name="most_helpful" value="Bonus practice"> Bonus practice</label>
+          <label><input type="radio" name="most_helpful" value="Playing one line"> Playing one line</label>
+          <label><input type="radio" name="most_helpful" value="Playing all"> Playing all</label>
+        </div>
+      </div>
+
+      <div style="margin-top:12px">
+        <label for="comments">Comments (optional)</label>
+        <textarea id="comments" placeholder="For example: The pause could be longer. English-first helped me understand the meaning. I liked practicing one line at a time."></textarea>
+      </div>
+
+      <div class="btns">
+        <button class="primary" id="submit-feedback-btn">Submit Feedback</button>
+        <button class="secondary" id="clear-feedback-btn">Clear</button>
+      </div>
+      <div class="result" id="result-box"></div>
+    </section>
+  </main>
+
+  <script>
+    const SUPABASE_URL = 'https://YOUR-PROJECT.supabase.co';
+    const SUPABASE_ANON = 'YOUR_SUPABASE_ANON_KEY';
+    const FEEDBACK_TABLE = 'reading_fluency_feedback';
+
+    const CONVERSATIONS = {
+      a: {
+        lessonId: '3.4-a',
+        title: '对话 A · 天衣无缝',
+        scene: '后台排练前的对话',
+        introEn: 'Two students, Xiao Ming and Xiao Fang, are backstage before their drama performance. They have been rehearsing for weeks. Let\'s listen in.',
+        introZh: '演出马上就要开始了，两个同学小明和小芳正在后台聊天。',
+        mainLines: [
+          { no: 1, speaker: '小芳', en: 'Xiao Fang: I\'m so nervous. What if I forget my lines on stage?', zh: '小芳：我好紧张。万一上台以后忘词了怎么办？' },
+          { no: 2, speaker: '小明', en: 'Xiao Ming: Relax. We\'ve rehearsed so many times — our coordination is absolutely seamless.', zh: '小明：别紧张嘛。我们排练了这么多次，配合已经天衣无缝了。' },
+          { no: 3, speaker: '小芳', en: 'Xiao Fang: But today is different — there\'s a real audience. I can\'t sleep well at night recently.', zh: '小芳：可今天不一样，有真正的观众。我最近晚上都睡不好觉。' },
+          { no: 4, speaker: '小明', en: 'Xiao Ming: That\'s totally normal. But think about it — we\'ve been rehearsing for six weeks. Every line, every move, we\'ve gone over them again and again.', zh: '小明：这很正常。但你想想——我们已经排练了六个星期。每一句台词，每一个动作，都一遍遍地练过了。' },
+          { no: 5, speaker: '小芳', en: 'Xiao Fang: That\'s true. Our script is solid, and there are basically no weak points the audience could find fault with.', zh: '小芳：说得也是。我们的剧本很周密，基本上没有什么破绽让观众挑毛病。' },
+          { no: 6, speaker: '小明', en: 'Xiao Ming: Exactly. And if you really do forget a line, I\'ll cover for you right away. Our cooperation will be seamless.', zh: '小明：就是嘛。而且你真要是忘词了，我马上帮你接上。我们的合作一定天衣无缝。' },
+          { no: 7, speaker: '小芳', en: 'Xiao Fang: You always know how to make people feel at ease. Alright, let\'s do this!', zh: '小芳：你总是能让人心情舒畅。好，我们上吧！' },
+          { no: 8, speaker: '小明', en: 'Xiao Ming: Go for it! This performance is going to be perfect — absolutely flawless!', zh: '小明：加油！这次演出一定非常完美——天衣无缝！' }
+        ],
+        extensionLines: [
+          { no: 9, speaker: 'Bonus', en: 'His plan was so meticulous that nobody could find any flaw in it at all.', zh: '他的计划非常周密，任何人都找不到一点儿破绽。' },
+          { no: 10, speaker: 'Bonus', en: 'Although it was their first time collaborating, the two of them worked together seamlessly.', zh: '虽然是第一次合作，两个人的配合却天衣无缝。' },
+          { no: 11, speaker: 'Bonus', en: 'When writing an essay, you should try to make the logic tight and flawless, leaving no obvious weak points.', zh: '写文章的时候，要尽量让逻辑严密，天衣无缝，不留明显的破绽。' },
+          { no: 12, speaker: 'Bonus', en: 'The police discovered a flaw in the suspect\'s alibi — his story wasn\'t seamless at all.', zh: '警察发现了嫌疑人不在场证明的破绽——他的故事根本不是天衣无缝的。' }
+        ],
+        outroEn: 'Great work! You\'ve completed Conversation A — 天衣无缝.',
+        outroZh: '做得很好！你已经完成了对话A——天衣无缝的跟读练习。'
+      },
+      b: {
+        lessonId: '3.4-b',
+        title: '对话 B · 胸有成竹',
+        scene: '期末考试前宿舍里的对话',
+        introEn: 'It\'s the night before the final exam. Xiao Lin is panicking, while her roommate Xiao Yun seems surprisingly calm. Let\'s listen.',
+        introZh: '期末考试前一天晚上，小林非常焦虑，而室友小云却出奇地平静。我们来听听他们的对话。',
+        mainLines: [
+          { no: 1, speaker: '小林', en: 'Xiao Lin: It\'s the last night before the exam and I haven\'t finished reviewing! I\'m so anxious I want to cry.', zh: '小林：考试前最后一晚了，我还没复习完！焦虑得想哭。' },
+          { no: 2, speaker: '小云', en: 'Xiao Yun: How come? You\'ve been reviewing for two weeks. You know all the key vocabulary and sentence patterns.', zh: '小云：怎么会呢？你复习了两个星期了。重点词汇和句型你都掌握了啊。' },
+          { no: 3, speaker: '小林', en: 'Xiao Lin: But what if I draw a topic I\'m not familiar with? My mind might go blank.', zh: '小林：但万一抽到不熟悉的题目怎么办？脑子可能会一片空白。' },
+          { no: 4, speaker: '小云', en: 'Xiao Yun: Look at me — I\'m completely calm. Because I\'ve been fully prepared. I\'m totally confident going into this exam.', zh: '小云：你看我——我完全不慌。因为我准备充分了。考这次试，我胸有成竹。' },
+          { no: 5, speaker: '小林', en: 'Xiao Lin: How did you get so prepared? I feel like I reviewed the same things as you!', zh: '小林：你是怎么准备得这么充分的？感觉我复习的东西和你差不多啊！' },
+          { no: 6, speaker: '小云', en: 'Xiao Yun: It\'s not just about reviewing. I also did lots of practice tests, so I know exactly what kind of mistakes I make.', zh: '小云：不只是复习。我还做了很多模拟题，所以我清楚地知道自己会犯什么错误。' },
+          { no: 7, speaker: '小林', en: 'Xiao Lin: No wonder you\'re so calm. That\'s the real preparation — you\'ve got the whole thing figured out already.', zh: '小林：难怪你这么沉着。这才叫真正的准备——你已经胸有成竹了。' },
+          { no: 8, speaker: '小云', en: 'Xiao Yun: You\'ve got a solid foundation too. Stop panicking and get a good night\'s sleep — that\'s the most important thing right now.', zh: '小云：你的基础也不差。别慌了，好好睡一觉——这才是现在最重要的事。' },
+          { no: 9, speaker: '小林', en: 'Xiao Lin: You\'re right. Staying up all night to cram isn\'t actually useful.', zh: '小林：你说得对。临时抱佛脚其实没什么用。' },
+          { no: 10, speaker: '小云', en: 'Xiao Yun: Exactly. If you study hard throughout the year, you\'ll walk into the exam confident and ready.', zh: '小云：就是嘛。平时认真学，考试的时候自然胸有成竹。' }
+        ],
+        extensionLines: [
+          { no: 11, speaker: 'Bonus', en: 'She has been practicing this piano piece for half a year. She was completely confident walking onto the stage.', zh: '这首钢琴曲她练了半年了。走上舞台的时候，她胸有成竹。' },
+          { no: 12, speaker: 'Bonus', en: 'Before the interview, he had done thorough research on the company — he walked in with complete confidence.', zh: '面试前，他对这家公司做了充分的研究——进去的时候胸有成竹。' },
+          { no: 13, speaker: 'Bonus', en: 'Only when you have truly put in the preparation can you face any challenge calmly and confidently.', zh: '只有真正做好了准备，才能沉着自信地面对任何挑战。' },
+          { no: 14, speaker: 'Bonus', en: 'He said he had no idea how the competition would go — but actually, anyone could see he was fully ready.', zh: '他说不知道比赛会怎么样——但其实谁都能看出来他胸有成竹。' }
+        ],
+        outroEn: 'Excellent! You\'ve completed Conversation B — 胸有成竹.',
+        outroZh: '太棒了！你已经完成了对话B——胸有成竹的跟读练习。'
+      }
+    };
+
+    let voices = [];
+    let currentKey = 'a';
+    let currentIndex = 0;
+    let playing = false;
+    let stopRequested = false;
+
+    const conversationSelect = document.getElementById('conversation-select');
+    const speedSelect = document.getElementById('speed-select');
+    const titleEl = document.getElementById('conversation-title');
+    const sceneEl = document.getElementById('scene');
+    const mainLineList = document.getElementById('main-line-list');
+    const extensionLineList = document.getElementById('extension-line-list');
+    const statusBox = document.getElementById('status-box');
+
+    function getConversation(){ return CONVERSATIONS[currentKey]; }
+    function getAllLines(){
+      const convo = getConversation();
+      return [...convo.mainLines, ...convo.extensionLines];
+    }
+
+    function getSpeed(){
+      const s = speedSelect.value;
+      if(s === 'slow') return {en:0.92, zh1:0.82, zh2:0.88, gap1:1300, gap2:3600};
+      if(s === 'fast') return {en:1.02, zh1:0.94, zh2:0.99, gap1:900, gap2:2200};
+      return {en:0.97, zh1:0.88, zh2:0.93, gap1:1100, gap2:3000};
+    }
+
+    function setStatus(text){ statusBox.textContent = text; }
+
+    function renderLineItem(line, globalIndex, active){
+      return `
+        <div class="line ${active ? 'active' : ''}" data-index="${globalIndex}">
+          <div class="meta"><span class="num">Line ${line.no}</span><span class="speaker">${line.speaker}</span></div>
+          <div class="en">${line.en}</div>
+          <div class="zh">${line.zh}</div>
+        </div>
+      `;
+    }
+
+    function attachLineEvents(){
+      document.querySelectorAll('.line').forEach(el => {
+        el.addEventListener('click', () => {
+          currentIndex = Number(el.dataset.index);
+          render();
+        });
+      });
+    }
+
+    function render(){
+      const convo = getConversation();
+      titleEl.textContent = convo.title;
+      sceneEl.textContent = convo.scene;
+      mainLineList.innerHTML = convo.mainLines.map((line, i) => renderLineItem(line, i, i === currentIndex)).join('');
+      extensionLineList.innerHTML = convo.extensionLines.map((line, i) => {
+        const globalIndex = convo.mainLines.length + i;
+        return renderLineItem(line, globalIndex, globalIndex === currentIndex);
+      }).join('');
+      attachLineEvents();
+    }
+
+    function highlight(index){
+      currentIndex = index;
+      render();
+      const active = document.querySelector(`.line[data-index="${index}"]`);
+      if(active) active.scrollIntoView({behavior:'smooth', block:'center'});
+    }
+
+    function populateVoices(){ voices = speechSynthesis.getVoices(); }
+
+    function chooseVoice(lang){
+      if(lang === 'en-US') return voices.find(v => /en/i.test(v.lang) && /Samantha|Ava|Google|Microsoft/i.test(v.name)) || voices.find(v => /en/i.test(v.lang)) || null;
+      return voices.find(v => (/zh|cmn/i.test(v.lang)) && /Ting|Mei|Xiaoxiao|Google|Microsoft/i.test(v.name)) || voices.find(v => /zh|cmn/i.test(v.lang)) || null;
+    }
+
+    function speak(text, lang, rate, pitch=1){
+      return new Promise((resolve, reject) => {
+        if(stopRequested) return resolve();
+        const u = new SpeechSynthesisUtterance(text);
+        u.lang = lang;
+        u.rate = rate;
+        u.pitch = pitch;
+        const voice = chooseVoice(lang);
+        if(voice) u.voice = voice;
+        u.onend = () => resolve();
+        u.onerror = () => reject(new Error('speech error'));
+        speechSynthesis.speak(u);
+      });
+    }
+
+    function wait(ms){ return new Promise(r => setTimeout(r, ms)); }
+
+    async function countdown(ms){
+      const sec = Math.ceil(ms / 1000);
+      for(let i = sec; i >= 1; i--){
+        if(stopRequested) return;
+        setStatus(`Your turn… ${i}`);
+        await wait(1000);
+      }
+    }
+
+    async function playIntro(){
+      const convo = getConversation();
+      const speed = getSpeed();
+      setStatus('Listening…');
+      await speak(convo.introEn, 'en-US', speed.en);
+      await wait(500);
+      await speak(convo.introZh, 'zh-CN', speed.zh1);
+      await wait(500);
+    }
+
+    function zhPitch(speaker){
+      if(/小芳|小林/.test(speaker)) return 1.06;
+      if(/小明|小云/.test(speaker)) return 0.96;
+      return 1;
+    }
+
+    async function playLine(index){
+      const lines = getAllLines();
+      const line = lines[index];
+      const speed = getSpeed();
+      highlight(index);
+      setStatus(`Listening to line ${line.no}…`);
+      await speak(line.en, 'en-US', speed.en);
+      await wait(speed.gap1);
+      await speak(line.zh, 'zh-CN', speed.zh1, zhPitch(line.speaker));
+      await countdown(speed.gap2);
+      await speak(line.zh, 'zh-CN', speed.zh2, zhPitch(line.speaker));
+      await countdown(speed.gap2);
+      setStatus('Ready.');
+    }
+
+    function toggleButtons(disabled){
+      ['play-all-btn','play-one-btn','prev-btn','next-btn'].forEach(id => document.getElementById(id).disabled = disabled);
+    }
+
+    async function playAll(){
+      if(playing) return;
+      playing = true;
+      stopRequested = false;
+      toggleButtons(true);
+      speechSynthesis.cancel();
+      try{
+        await playIntro();
+        const lines = getAllLines();
+        for(let i = currentIndex; i < lines.length; i++){
+          if(stopRequested) break;
+          await playLine(i);
+        }
+        if(!stopRequested){
+          const convo = getConversation();
+          const speed = getSpeed();
+          await speak(convo.outroEn, 'en-US', speed.en);
+          await wait(400);
+          await speak(convo.outroZh, 'zh-CN', speed.zh2);
+          setStatus('Done.');
+        }
+      }catch(err){
+        setStatus('Playback failed. Please try again.');
+      }finally{
+        playing = false;
+        toggleButtons(false);
+      }
+    }
+
+    async function playOne(){
+      if(playing) return;
+      playing = true;
+      stopRequested = false;
+      toggleButtons(true);
+      speechSynthesis.cancel();
+      try{
+        await playLine(currentIndex);
+      }catch(err){
+        setStatus('Playback failed. Please try again.');
+      }finally{
+        playing = false;
+        toggleButtons(false);
+      }
+    }
+
+    function stopPlayback(){
+      stopRequested = true;
+      playing = false;
+      speechSynthesis.cancel();
+      toggleButtons(false);
+      setStatus('Stopped.');
+    }
+
+    function getRadioValue(name){
+      const checked = document.querySelector(`input[name="${name}"]:checked`);
+      return checked ? checked.value : '';
+    }
+
+    async function submitFeedback(){
+      const resultBox = document.getElementById('result-box');
+      const btn = document.getElementById('submit-feedback-btn');
+      const studentName = document.getElementById('student-name').value.trim();
+      const englishHelpful = getRadioValue('english_helpful');
+      const mostHelpful = getRadioValue('most_helpful');
+      const paceRating = document.getElementById('pace-rating').value;
+      const comments = document.getElementById('comments').value.trim();
+
+      if(!studentName && !englishHelpful && !mostHelpful && !paceRating && !comments){
+        resultBox.className = 'result show error';
+        resultBox.textContent = 'Please enter at least one response.';
+        return;
+      }
+
+      resultBox.className = 'result';
+      btn.disabled = true;
+      btn.textContent = 'Submitting…';
+      try{
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+        const { error } = await supabase.from(FEEDBACK_TABLE).insert({
+          student_name: studentName || null,
+          lesson_id: '3.4',
+          lesson_title: '成语故事二则',
+          conversation_id: currentKey,
+          english_first_helpful: englishHelpful || null,
+          pace_rating: paceRating ? Number(paceRating) : null,
+          comments: comments || null,
+          current_play_mode: mostHelpful || null,
+          current_speed: speedSelect.value,
+          user_agent: navigator.userAgent
+        });
+        if(error) throw error;
+        resultBox.className = 'result show success';
+        resultBox.textContent = 'Feedback submitted. Thank you!';
+      }catch(err){
+        resultBox.className = 'result show error';
+        resultBox.textContent = 'Submission failed: ' + err.message;
+      }finally{
+        btn.disabled = false;
+        btn.textContent = 'Submit Feedback';
+      }
+    }
+
+    function clearFeedback(){
+      document.getElementById('student-name').value = '';
+      document.getElementById('pace-rating').value = '';
+      document.querySelectorAll('input[name="english_helpful"]').forEach(el => el.checked = false);
+      document.querySelectorAll('input[name="most_helpful"]').forEach(el => el.checked = false);
+      document.getElementById('comments').value = '';
+      const resultBox = document.getElementById('result-box');
+      resultBox.className = 'result';
+      resultBox.textContent = '';
+    }
+
+    conversationSelect.addEventListener('change', () => {
+      currentKey = conversationSelect.value;
+      currentIndex = 0;
+      render();
+      setStatus('Ready.');
+    });
+
+    document.getElementById('play-all-btn').addEventListener('click', playAll);
+    document.getElementById('play-one-btn').addEventListener('click', playOne);
+    document.getElementById('prev-btn').addEventListener('click', () => { currentIndex = Math.max(0, currentIndex - 1); render(); });
+    document.getElementById('next-btn').addEventListener('click', () => { currentIndex = Math.min(getAllLines().length - 1, currentIndex + 1); render(); });
+    document.getElementById('stop-btn').addEventListener('click', stopPlayback);
+    document.getElementById('submit-feedback-btn').addEventListener('click', submitFeedback);
+    document.getElementById('clear-feedback-btn').addEventListener('click', clearFeedback);
+
+    window.speechSynthesis.onvoiceschanged = populateVoices;
+    populateVoices();
+    render();
+  </script>
+</body>
+</html>
