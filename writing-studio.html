@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Writing Studio 3.4 | 写作工坊</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'PingFang SC','Microsoft YaHei',sans-serif;background:#f5f6f8;color:#2c2c2c;min-height:100vh}
+a{color:inherit;text-decoration:none}
+button{cursor:pointer;font-family:inherit}
+.site-header{background:#1a1a2e;color:#fff;padding:14px 24px;display:flex;align-items:center;gap:16px;position:sticky;top:0;z-index:100}
+.site-header a.back{color:#aab;font-size:13px;white-space:nowrap}
+.site-header a.back:hover{color:#fff}
+.site-header h1{font-size:18px;font-weight:700;flex:1}
+.site-header span{font-size:12px;opacity:.6}
+.page-wrap{max-width:1120px;margin:0 auto;padding:28px 20px}
+.hero{background:#fff;border-radius:14px;padding:22px 24px;margin-bottom:20px;box-shadow:0 2px 8px rgba(0,0,0,.06);border-top:5px solid #8a5a19}
+.hero h2{font-size:28px;color:#3f2b14;margin-bottom:8px}
+.hero p{line-height:1.8;color:#555}
+.hero .meta{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
+.meta-badge{background:#fbf6f0;border:1px solid #eadfce;color:#7a5527;border-radius:999px;padding:6px 12px;font-size:13px;font-weight:600}
+.setup-bar{background:#fff;border-radius:12px;padding:20px 24px;margin-bottom:20px;display:flex;gap:16px;align-items:flex-end;flex-wrap:wrap;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.setup-bar label{font-size:12px;font-weight:700;color:#888;display:block;margin-bottom:5px}
+.setup-bar input[type=text]{border:1.5px solid #ddd;border-radius:8px;padding:9px 14px;font-size:14px;width:240px;outline:none}
+.setup-bar input[type=text]:focus{border-color:#8a5a19}
+.setup-note{font-size:13px;color:#777;line-height:1.6;max-width:420px}
+.content-grid{display:grid;grid-template-columns:360px 1fr;gap:20px;align-items:start}
+@media(max-width:860px){.content-grid{grid-template-columns:1fr}}
+.left-panel{display:flex;flex-direction:column;gap:16px}
+.panel-card{background:#fff;border-radius:12px;padding:20px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.panel-card h2{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#888;margin-bottom:14px}
+.task-title{font-size:20px;font-weight:700;color:#3f2b14;line-height:1.45;margin-bottom:10px}
+.task-note{font-size:14px;line-height:1.8;color:#444}
+.task-list{margin-top:10px;padding-left:18px;color:#444}
+.task-list li{margin:6px 0;line-height:1.75}
+.checklist{display:grid;gap:10px}
+.check-item{padding:10px 12px;border-radius:10px;border:1px solid #eadfce;background:#fffaf3;font-size:14px;line-height:1.65;color:#444}
+.vocab-toggle{background:none;border:none;font-size:13px;font-weight:700;color:#8a5a19;padding:0;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.vocab-toggle::after{content:'▾';font-size:11px;transition:transform .2s}
+.vocab-toggle.open::after{transform:rotate(-180deg)}
+.vocab-chips{display:flex;flex-wrap:wrap;gap:7px;max-height:280px;overflow-y:auto}
+.vocab-chip{background:#f7f7f7;border:1.5px solid #e8e8e8;border-radius:8px;padding:7px 10px;font-size:12px;cursor:pointer;transition:border-color .15s,background .15s}
+.vocab-chip:hover{background:#fff;border-color:#8a5a19}
+.vocab-chip .zh{font-size:14px;font-weight:700}
+.vocab-chip .py{color:#888;margin:0 4px}
+.vocab-chip .en{color:#555}
+.vocab-chips.hidden{display:none}
+.right-panel{background:#fff;border-radius:12px;padding:24px;box-shadow:0 2px 8px rgba(0,0,0,.06);display:flex;flex-direction:column;gap:16px}
+.writing-header{display:flex;justify-content:space-between;align-items:center;gap:14px}
+.writing-header h2{font-size:18px;font-weight:700;color:#2c2c2c}
+.word-count{font-size:13px;color:#888}
+.word-count span{font-weight:700;color:#8a5a19}
+.selected-prompt-display{background:#fafafa;border-left:3px solid #8a5a19;padding:12px 14px;border-radius:0 8px 8px 0;font-size:14px;color:#444;line-height:1.7}
+textarea#writing-input{width:100%;min-height:320px;border:1.5px solid #ddd;border-radius:10px;padding:14px;font-size:15px;line-height:1.8;resize:vertical;outline:none;font-family:inherit;color:#2c2c2c}
+textarea#writing-input:focus{border-color:#8a5a19}
+.action-row{display:flex;gap:10px;flex-wrap:wrap}
+.btn{padding:10px 20px;border-radius:8px;font-size:14px;font-weight:600;border:none;transition:opacity .15s,transform .1s}
+.btn:active{transform:scale(.97)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn-primary{background:#8a5a19;color:#fff}
+.btn-primary:hover:not(:disabled){opacity:.9}
+.btn-secondary{background:#f0f0f0;color:#444}
+.btn-secondary:hover:not(:disabled){background:#e5e5e5}
+.btn-submit{background:#1a1a2e;color:#fff}
+.btn-submit:hover:not(:disabled){opacity:.85}
+.feedback-panel{border:1.5px solid #e0e0e0;border-radius:10px;overflow:hidden;display:none}
+.feedback-header{background:#f7f7f7;padding:10px 16px;font-size:12px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid #e0e0e0;display:flex;justify-content:space-between;align-items:center}
+.feedback-body{padding:16px;font-size:14px;line-height:1.8;white-space:pre-wrap;color:#333;max-height:360px;overflow-y:auto}
+.feedback-body.empty{color:#aaa;font-style:italic}
+.loader{display:inline-block;width:16px;height:16px;border:2px solid #ddd;border-top-color:#8a5a19;border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.submit-result{padding:12px 16px;border-radius:8px;font-size:14px;font-weight:500;display:none}
+.submit-result.success{background:#e8f5e9;color:#2e7d32;border:1px solid #a5d6a7}
+.submit-result.error{background:#ffebee;color:#c62828;border:1px solid #ef9a9a}
+.tip-box{padding:12px 14px;border-radius:10px;background:#fffaf3;border:1px solid #eadfce;color:#5a4527;font-size:14px;line-height:1.75}
+</style>
+</head>
+<body>
+<header class="site-header">
+  <a class="back" href="index.html">← 首页</a>
+  <h1>写作工坊 Writing Studio</h1>
+  <span>Lesson 3.4 · 成语故事二则</span>
+</header>
+
+<div class="page-wrap">
+  <section class="hero">
+    <h2>3.4 写作任务 · 成语活用</h2>
+    <p>这一页围绕 <strong>天衣无缝</strong> 和 <strong>胸有成竹</strong> 设计。学生先读题、看词汇支持，再完成短文写作；随后可直接调用 AI 反馈，并把作品连同反馈提交到 Supabase。</p>
+    <div class="meta">
+      <span class="meta-badge">One focused task</span>
+      <span class="meta-badge">Vocab support</span>
+      <span class="meta-badge">Worker feedback</span>
+      <span class="meta-badge">Supabase submission</span>
+    </div>
+  </section>
+
+  <div class="setup-bar">
+    <div>
+      <label for="student-name">你的姓名 Your Name</label>
+      <input type="text" id="student-name" placeholder="e.g. 张明 / Ming Zhang">
+    </div>
+    <div class="setup-note">
+      请先输入姓名，再开始写作。点击左边词汇银行中的词语可以直接复制到剪贴板，方便学生快速使用目标表达。
+    </div>
+  </div>
+
+  <div class="content-grid">
+    <div class="left-panel">
+      <div class="panel-card">
+        <h2>写作任务 Writing Task</h2>
+        <div class="task-title">一次让我觉得“胸有成竹”或“天衣无缝”的经历</div>
+        <div class="task-note">
+          请写一段 <strong>120–180 字</strong> 的短文，介绍一次真实经历。你可以写：
+        </div>
+        <ul class="task-list">
+          <li>你在做一件事之前，为什么会觉得自己 <strong>胸有成竹</strong></li>
+          <li>或者你觉得某个计划、表演、合作、安排很 <strong>天衣无缝</strong></li>
+          <li>事情是怎么发生的，你为什么会这样评价，最后结果怎么样</li>
+        </ul>
+      </div>
+
+      <div class="panel-card">
+        <h2>写作要求 Checklist</h2>
+        <div class="checklist">
+          <div class="check-item">至少正确使用 <strong>1 个成语</strong>：胸有成竹 / 天衣无缝</div>
+          <div class="check-item">尽量使用 <strong>3–5 个本课词语</strong></div>
+          <div class="check-item">写清楚 <strong>背景、过程、结果、感受</strong></div>
+          <div class="check-item">尽量写具体，不要只写抽象观点</div>
+        </div>
+      </div>
+
+      <div class="panel-card">
+        <button class="vocab-toggle open" id="vocab-toggle" onclick="toggleVocab()">词汇银行 Vocab Bank</button>
+        <div class="vocab-chips" id="vocab-chips"></div>
+      </div>
+    </div>
+
+    <div class="right-panel">
+      <div class="writing-header">
+        <h2>开始写作 Start Writing</h2>
+        <div class="word-count">字数：<span id="char-count">0</span></div>
+      </div>
+
+      <div class="selected-prompt-display" id="prompt-display">
+        请写一段 120–180 字的短文，介绍一次让你觉得自己胸有成竹，或者一件你觉得天衣无缝的事情。请写清楚背景、过程、结果和你的感受，并至少使用一个本课成语。
+      </div>
+
+      <div class="tip-box">
+        Tip: You can write about an exam, a presentation, a game, a performance, teamwork, or planning an event.
+      </div>
+
+      <textarea id="writing-input" placeholder="在这里开始写作…&#10;&#10;提示：点击左边的词汇银行可以复制词语；写满约 120 字后再获取 AI 反馈。" oninput="updateCount()"></textarea>
+
+      <div class="action-row">
+        <button class="btn btn-primary" id="feedback-btn" onclick="getFeedback()" disabled>✦ AI 反馈 Get Feedback</button>
+        <button class="btn btn-secondary" onclick="clearWriting()">清空 Clear</button>
+      </div>
+
+      <div class="feedback-panel" id="feedback-panel">
+        <div class="feedback-header">
+          <span>AI 写作反馈 · Writing Feedback</span>
+          <span id="feedback-loader"></span>
+        </div>
+        <div class="feedback-body empty" id="feedback-body">反馈将在这里显示…</div>
+      </div>
+
+      <div class="action-row">
+        <button class="btn btn-submit" id="submit-btn" onclick="submitWork()" disabled>↑ 提交作品 Submit</button>
+      </div>
+      <div class="submit-result" id="submit-result"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const WORKER_URL    = 'https://ach1-writing-feedback.xc2375.workers.dev';
+const SUPABASE_URL  = 'https://pmufwdaolutuxhdlaiaw.supabase.co';
+const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBtdWZ3ZGFvbHV0dXhoZGxhaWF3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQyMjU0ODEsImV4cCI6MjA4OTgwMTQ4MX0.VwnKCfzw3iIuCM3Cz4oCdX3vhoVHqwlk0dnkv9Lk2gY';
+const LESSON_ID = '3.4';
+const LESSON_TITLE = '成语故事二则';
+const PROMPT_TEXT = '请写一段120–180字的短文，介绍一次让你觉得自己胸有成竹，或者一件你觉得天衣无缝的事情。请写清楚背景、过程、结果和你的感受，并至少使用一个本课成语。';
+const WRITING_SUBMISSION_TABLE = 'writing_submissions';
+
+const VOCAB = [
+  {w:'胸有成竹',p:'xiōng yǒu chéng zhú',e:'well prepared and confident'},
+  {w:'天衣无缝',p:'tiān yī wú fèng',e:'flawless; without flaws'},
+  {w:'周密',p:'zhōu mì',e:'careful; thorough'},
+  {w:'配合',p:'pèi hé',e:'coordination'},
+  {w:'合作',p:'hé zuò',e:'collaboration'},
+  {w:'破绽',p:'pò zhàn',e:'flaw; weak point'},
+  {w:'充分',p:'chōng fèn',e:'sufficient; full'},
+  {w:'把握',p:'bǎ wò',e:'confidence; certainty'},
+  {w:'沉着',p:'chén zhuó',e:'calm; composed'},
+  {w:'观察',p:'guān chá',e:'observe'},
+  {w:'准备',p:'zhǔn bèi',e:'prepare'},
+  {w:'紧张',p:'jǐn zhāng',e:'nervous'},
+  {w:'表现',p:'biǎo xiàn',e:'performance'},
+  {w:'计划',p:'jì huà',e:'plan'},
+  {w:'顺利',p:'shùn lì',e:'smoothly'},
+  {w:'完美',p:'wán měi',e:'perfect'}
+];
+
+let latestFeedback = '';
+
+function renderVocab() {
+  const vc = document.getElementById('vocab-chips');
+  vc.innerHTML = VOCAB.map(v => `
+    <div class="vocab-chip" title="点击复制 Click to copy" onclick="copyVocab('${v.w}')">
+      <span class="zh">${v.w}</span><span class="py">${v.p}</span><span class="en">${v.e}</span>
+    </div>`).join('');
+}
+renderVocab();
+
+function updateCount() {
+  const text = document.getElementById('writing-input').value;
+  const count = (text.match(/[\u4e00-\u9fff\u3400-\u4dbf\uf900-\ufaff]/g) || []).length;
+  document.getElementById('char-count').textContent = count;
+  document.getElementById('feedback-btn').disabled = count < 60;
+}
+
+function clearWriting() {
+  document.getElementById('writing-input').value = '';
+  document.getElementById('char-count').textContent = '0';
+  document.getElementById('feedback-btn').disabled = true;
+  document.getElementById('submit-btn').disabled = true;
+  document.getElementById('feedback-panel').style.display = 'none';
+  document.getElementById('feedback-body').className = 'feedback-body empty';
+  document.getElementById('feedback-body').textContent = '反馈将在这里显示…';
+  document.getElementById('submit-result').style.display = 'none';
+  latestFeedback = '';
+}
+
+function toggleVocab() {
+  const chips = document.getElementById('vocab-chips');
+  const btn = document.getElementById('vocab-toggle');
+  chips.classList.toggle('hidden');
+  btn.classList.toggle('open');
+}
+
+function copyVocab(word) {
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(word).then(() => showCopyToast(word));
+  } else {
+    const ta = document.createElement('textarea');
+    ta.value = word;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    showCopyToast(word);
+  }
+}
+
+function showCopyToast(word) {
+  let t = document.getElementById('copy-toast');
+  if (!t) {
+    t = document.createElement('div');
+    t.id = 'copy-toast';
+    t.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#333;color:#fff;padding:8px 18px;border-radius:20px;font-size:13px;z-index:9999;transition:opacity .3s';
+    document.body.appendChild(t);
+  }
+  t.textContent = `"${word}" 已复制 Copied`;
+  t.style.opacity = '1';
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => t.style.opacity = '0', 1800);
+}
+
+async function getFeedback() {
+  const writing = document.getElementById('writing-input').value.trim();
+  if (!writing) return;
+
+  const btn = document.getElementById('feedback-btn');
+  const loader = document.getElementById('feedback-loader');
+  const body = document.getElementById('feedback-body');
+  const panel = document.getElementById('feedback-panel');
+
+  btn.disabled = true;
+  btn.textContent = '分析中…';
+  loader.innerHTML = '<span class="loader"></span>';
+  panel.style.display = 'block';
+  body.className = 'feedback-body empty';
+  body.textContent = '正在请求 AI 反馈，请稍候…';
+
+  try {
+    const resp = await fetch(WORKER_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        writing,
+        promptText: PROMPT_TEXT,
+        lessonId: LESSON_ID,
+        lessonTitle: LESSON_TITLE,
+        targetVocab: VOCAB.map(v => v.w)
+      })
+    });
+    const data = await resp.json();
+    if (data.feedback) {
+      latestFeedback = data.feedback;
+      body.className = 'feedback-body';
+      body.textContent = data.feedback;
+      document.getElementById('submit-btn').disabled = false;
+    } else {
+      body.textContent = '反馈获取失败，请重试。Error: ' + (data.error || 'unknown');
+    }
+  } catch (err) {
+    body.textContent = '无法连接到反馈服务。请确认 Cloudflare Worker 已部署。\n\n' + err.message;
+  } finally {
+    btn.textContent = '✦ AI 反馈 Get Feedback';
+    loader.innerHTML = '';
+    updateCount();
+  }
+}
+
+async function submitWork() {
+  const name = document.getElementById('student-name').value.trim();
+  const writing = document.getElementById('writing-input').value.trim();
+  const charCount = (writing.match(/[\u4e00-\u9fff\u3400-\u4dbf\uf900-\ufaff]/g) || []).length;
+  const result = document.getElementById('submit-result');
+
+  if (!name) { alert('请先输入你的姓名 Please enter your name.'); return; }
+  if (!writing) { alert('请先写一些内容 Please write something first.'); return; }
+
+  const btn = document.getElementById('submit-btn');
+  btn.disabled = true;
+  btn.textContent = '提交中…';
+
+  try {
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+    const { error } = await supabase.from(WRITING_SUBMISSION_TABLE).insert({
+      student_name: name,
+      lesson_id: LESSON_ID,
+      lesson_title: LESSON_TITLE,
+      prompt_index: 0,
+      prompt_text: PROMPT_TEXT,
+      writing_text: writing,
+      char_count: charCount,
+      ai_feedback: latestFeedback || null
+    });
+    if (error) throw error;
+    result.className = 'submit-result success';
+    result.style.display = 'block';
+    result.textContent = '✓ 作品已成功提交！Your writing has been submitted successfully.';
+    btn.textContent = '✓ 已提交';
+  } catch (err) {
+    result.className = 'submit-result error';
+    result.style.display = 'block';
+    result.textContent = '提交失败 Submission failed: ' + err.message;
+    btn.disabled = false;
+    btn.textContent = '↑ 提交作品 Submit';
+  }
+}
+</script>
+</body>
+</html>
