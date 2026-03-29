@@ -161,35 +161,12 @@
     }
 
     .support-card h3,
-    .question-card h3 {
+    .question-card h3,
+    .feedback-card h3 {
       margin-top: 0;
       margin-bottom: 0.6rem;
       color: var(--primary-dark);
       font-size: 1.05rem;
-    }
-
-    .support-word {
-      font-size: 1.45rem;
-      font-weight: 700;
-      color: var(--primary-dark);
-      margin-bottom: 0.2rem;
-    }
-
-    .support-pinyin {
-      color: #9a6d36;
-      font-weight: 700;
-      margin-bottom: 0.35rem;
-    }
-
-    .support-english {
-      color: var(--text);
-      line-height: 1.6;
-      margin-bottom: 0.4rem;
-    }
-
-    .support-note {
-      color: var(--muted);
-      line-height: 1.65;
     }
 
     .placeholder-note {
@@ -265,10 +242,115 @@
       color: var(--text);
     }
 
+    .gloss-tooltip {
+      position: absolute;
+      z-index: 1200;
+      width: min(320px, calc(100vw - 24px));
+      padding: 0.85rem 0.95rem;
+      border-radius: 14px;
+      background: #fffdf9;
+      border: 1px solid #eadfce;
+      box-shadow: 0 14px 34px rgba(80, 52, 18, 0.16);
+      display: none;
+    }
+
+    .gloss-tooltip.show {
+      display: block;
+    }
+
+    .gloss-tooltip .tooltip-word {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--primary-dark);
+      margin-bottom: 0.18rem;
+    }
+
+    .gloss-tooltip .tooltip-pinyin {
+      color: #9a6d36;
+      font-weight: 700;
+      margin-bottom: 0.3rem;
+    }
+
+    .gloss-tooltip .tooltip-english {
+      color: var(--text);
+      line-height: 1.6;
+      margin-bottom: 0.35rem;
+    }
+
+    .gloss-tooltip .tooltip-note {
+      color: var(--muted);
+      line-height: 1.65;
+      font-size: 0.96rem;
+    }
+
+    .feedback-card {
+      margin-top: 1rem;
+    }
+
+    .feedback-form {
+      display: grid;
+      gap: 0.9rem;
+    }
+
+    .form-row.two-col {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.85rem;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 0.35rem;
+      font-weight: 700;
+      color: var(--primary-dark);
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      border: 1px solid #eadfce;
+      border-radius: 12px;
+      padding: 0.7rem 0.8rem;
+      font: inherit;
+      color: var(--text);
+      background: #fffdf9;
+      box-sizing: border-box;
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 110px;
+    }
+
+    .feedback-submit-status {
+      display: none;
+      padding: 0.85rem 0.95rem;
+      border-radius: 12px;
+      line-height: 1.6;
+      border: 1px solid #eadfce;
+      background: #fffdf9;
+    }
+
+    .feedback-submit-status.show {
+      display: block;
+    }
+
+    .feedback-submit-status.success {
+      border-color: #cdddc6;
+      background: #f7fbf5;
+    }
+
+    .feedback-submit-status.error {
+      border-color: #e4c8c1;
+      background: #fff8f6;
+    }
+
     @media (max-width: 960px) {
       .hero-layout,
       .how-grid,
-      .reading-layout {
+      .reading-layout,
+      .form-row.two-col {
         grid-template-columns: 1fr;
       }
 
@@ -334,8 +416,8 @@
                 <p>Try to read each story once without clicking every word.</p>
               </div>
               <div class="mini-card">
-                <h3>2. Click words</h3>
-                <p>Click or hover on highlighted words to see pinyin, English, and a short note.</p>
+                <h3>2. Word pop-ups</h3>
+                <p>On a computer, hover on highlighted words. On a phone or tablet, tap the word.</p>
               </div>
               <div class="mini-card">
                 <h3>3. Check meaning</h3>
@@ -614,16 +696,79 @@
               Which kind of support helped you most on this page?
               The clickable words, the pinyin, the short notes, or the questions?
             </div>
+
+            <div class="card feedback-card">
+              <h3>Page Feedback</h3>
+              <p class="reading-note">
+                Your feedback helps us improve the Smart Reading page. Please tell us what worked well and what still needs support.
+              </p>
+
+              <form id="readingFeedbackForm" class="feedback-form">
+                <div class="form-row two-col">
+                  <div class="form-group">
+                    <label for="studentName">Name (optional)</label>
+                    <input id="studentName" name="student_name" type="text" placeholder="Your name" />
+                  </div>
+
+                  <div class="form-group">
+                    <label for="deviceType">Device</label>
+                    <select id="deviceType" name="device_type">
+                      <option value="">Select one</option>
+                      <option value="desktop">Desktop / Laptop</option>
+                      <option value="tablet">Tablet</option>
+                      <option value="phone">Phone</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="helpfulSupport">Which support helped you most?</label>
+                  <select id="helpfulSupport" name="helpful_support" required>
+                    <option value="">Select one</option>
+                    <option value="word_popups">Word pop-ups</option>
+                    <option value="pinyin">Pinyin</option>
+                    <option value="audio">Audio</option>
+                    <option value="questions">Reading questions</option>
+                    <option value="full_text">Seeing the full text</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label for="popupHelpfulness">Were the word pop-ups helpful?</label>
+                  <select id="popupHelpfulness" name="popup_helpfulness" required>
+                    <option value="">Select one</option>
+                    <option value="very_helpful">Very helpful</option>
+                    <option value="somewhat_helpful">Somewhat helpful</option>
+                    <option value="not_helpful">Not very helpful</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label for="missingWords">Which words still need support?</label>
+                  <textarea id="missingWords" name="missing_words" rows="4" placeholder="Please list words or phrases that still need pinyin, English, or notes."></textarea>
+                </div>
+
+                <div class="form-group">
+                  <label for="pageSuggestions">Any suggestions for improving this page?</label>
+                  <textarea id="pageSuggestions" name="suggestions" rows="4" placeholder="What should we add, remove, or improve?"></textarea>
+                </div>
+
+                <div class="question-actions">
+                  <button class="small-btn" type="submit">Submit Feedback</button>
+                  <button class="small-btn secondary" type="button" id="resetFeedbackBtn">Clear</button>
+                </div>
+
+                <div id="feedbackStatus" class="feedback-submit-status" aria-live="polite"></div>
+              </form>
+            </div>
           </div>
 
           <div class="panel-card">
             <div class="card support-card">
               <h3>Word support</h3>
-              <div id="supportPanel">
-                <div class="placeholder-note">
-                  Click or hover on a highlighted word in the text.
-                  You will see the pinyin, English meaning, and a short reading note here.
-                </div>
+              <div class="placeholder-note">
+                On a computer, hover over a highlighted word to see a pop-up with pinyin, English, and a short note.
+                On a phone or tablet, tap the word to open the pop-up, then tap anywhere else to close it.
               </div>
             </div>
 
@@ -704,6 +849,8 @@
     </section>
   </main>
 
+  <div id="glossTooltip" class="gloss-tooltip" role="dialog" aria-hidden="true"></div>
+
   <footer class="site-footer">
     <div class="container footer-inner">
       <p>Advanced Chinese for Humanities AI</p>
@@ -712,79 +859,132 @@
   </footer>
 
   <script>
-    const supportPanel = document.getElementById("supportPanel");
     const glosses = document.querySelectorAll(".gloss");
     const readerTexts = document.querySelectorAll(".reader-text");
     const togglePinyinBtn = document.getElementById("togglePinyinBtn");
     const clearFocusBtn = document.getElementById("clearFocusBtn");
+    const tooltip = document.getElementById("glossTooltip");
+    const feedbackForm = document.getElementById("readingFeedbackForm");
+    const feedbackStatus = document.getElementById("feedbackStatus");
+    const resetFeedbackBtn = document.getElementById("resetFeedbackBtn");
+
+    const SUPABASE_URL = 'https://pmufwdaolutuxhdlaiaw.supabase.co';
+    const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBtdWZ3ZGFvbHV0dXhoZGxhaWF3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQyMjU0ODEsImV4cCI6MjA4OTgwMTQ4MX0.VwnKCfzw3iIuCM3Cz4oCdX3vhoVHqwlk0dnkv9Lk2gY';
+    const FEEDBACK_TABLE = 'reading_fluency_feedback';
 
     let pinyinVisible = false;
+    let pinnedGloss = null;
 
-    function renderSupport(wordEl) {
-      const word = wordEl.dataset.word;
-      const pinyin = wordEl.dataset.pinyin;
-      const english = wordEl.dataset.english;
-      const note = wordEl.dataset.note;
-
-      supportPanel.innerHTML = `
-        <div class="support-word">${word}</div>
-        <div class="support-pinyin">${pinyin}</div>
-        <div class="support-english">${english}</div>
-        <div class="support-note">${note}</div>
-      `;
+    function isTouchLike() {
+      return window.matchMedia("(hover: none), (pointer: coarse)").matches || window.innerWidth <= 768;
     }
 
     function clearActiveGloss() {
       glosses.forEach(el => el.classList.remove("active"));
     }
 
+    function fillTooltip(wordEl) {
+      tooltip.innerHTML = `
+        <div class="tooltip-word">${wordEl.dataset.word}</div>
+        <div class="tooltip-pinyin">${wordEl.dataset.pinyin}</div>
+        <div class="tooltip-english">${wordEl.dataset.english}</div>
+        <div class="tooltip-note">${wordEl.dataset.note}</div>
+      `;
+    }
+
+    function positionTooltip(wordEl) {
+      const rect = wordEl.getBoundingClientRect();
+      const tooltipRect = tooltip.getBoundingClientRect();
+      const pageTop = window.scrollY + rect.bottom + 10;
+      let left = window.scrollX + rect.left + rect.width / 2 - tooltipRect.width / 2;
+      const minLeft = window.scrollX + 12;
+      const maxLeft = window.scrollX + window.innerWidth - tooltipRect.width - 12;
+      left = Math.max(minLeft, Math.min(left, maxLeft));
+      tooltip.style.top = `${pageTop}px`;
+      tooltip.style.left = `${left}px`;
+    }
+
+    function showTooltip(wordEl, pin = false) {
+      fillTooltip(wordEl);
+      tooltip.classList.add("show");
+      tooltip.setAttribute("aria-hidden", "false");
+      clearActiveGloss();
+      wordEl.classList.add("active");
+      requestAnimationFrame(() => positionTooltip(wordEl));
+      pinnedGloss = pin ? wordEl : null;
+    }
+
+    function hideTooltip(force = false) {
+      if (pinnedGloss && !force) return;
+      tooltip.classList.remove("show");
+      tooltip.setAttribute("aria-hidden", "true");
+      clearActiveGloss();
+      pinnedGloss = null;
+    }
+
     glosses.forEach(gloss => {
       gloss.addEventListener("mouseenter", () => {
-        if (window.innerWidth > 768) {
-          clearActiveGloss();
-          gloss.classList.add("active");
-          renderSupport(gloss);
+        if (!isTouchLike()) showTooltip(gloss, false);
+      });
+
+      gloss.addEventListener("mousemove", () => {
+        if (!isTouchLike() && tooltip.classList.contains("show")) {
+          positionTooltip(gloss);
         }
+      });
+
+      gloss.addEventListener("mouseleave", () => {
+        if (!isTouchLike()) hideTooltip(true);
       });
 
       gloss.addEventListener("click", (e) => {
         e.stopPropagation();
-        clearActiveGloss();
-        gloss.classList.add("active");
-        renderSupport(gloss);
+        if (isTouchLike()) {
+          if (pinnedGloss === gloss) {
+            hideTooltip(true);
+          } else {
+            showTooltip(gloss, true);
+          }
+        }
       });
     });
 
-    const supportCard = document.getElementById("supportPanel");
-    supportCard.addEventListener("click", (e) => e.stopPropagation());
+    if (tooltip) {
+      tooltip.addEventListener("click", (e) => e.stopPropagation());
+    }
 
     document.addEventListener("click", () => {
-      clearActiveGloss();
-      supportPanel.innerHTML = `
-        <div class="placeholder-note">
-          Click or hover on a highlighted word in the text.
-          You will see the pinyin, English meaning, and a short reading note here.
-        </div>
-      `;
+      hideTooltip(true);
     });
 
-    togglePinyinBtn.addEventListener("click", () => {
-      pinyinVisible = !pinyinVisible;
-      readerTexts.forEach(text => {
-        text.classList.toggle("show-pinyin", pinyinVisible);
+    window.addEventListener("scroll", () => {
+      if (pinnedGloss && tooltip.classList.contains("show")) {
+        positionTooltip(pinnedGloss);
+      }
+    });
+
+    window.addEventListener("resize", () => {
+      if (tooltip.classList.contains("show")) {
+        const currentGloss = pinnedGloss || document.querySelector(".gloss.active");
+        if (currentGloss) positionTooltip(currentGloss);
+      }
+    });
+
+    if (togglePinyinBtn) {
+      togglePinyinBtn.addEventListener("click", () => {
+        pinyinVisible = !pinyinVisible;
+        readerTexts.forEach(text => {
+          text.classList.toggle("show-pinyin", pinyinVisible);
+        });
+        togglePinyinBtn.textContent = pinyinVisible ? "Hide Pinyin" : "Show Pinyin";
       });
-      togglePinyinBtn.textContent = pinyinVisible ? "Hide Pinyin" : "Show Pinyin";
-    });
+    }
 
-    clearFocusBtn.addEventListener("click", () => {
-      clearActiveGloss();
-      supportPanel.innerHTML = `
-        <div class="placeholder-note">
-          Click or hover on a highlighted word in the text.
-          You will see the pinyin, English meaning, and a short reading note here.
-        </div>
-      `;
-    });
+    if (clearFocusBtn) {
+      clearFocusBtn.addEventListener("click", () => {
+        hideTooltip(true);
+      });
+    }
 
     function checkReadingQuestion(questionName, correctAnswer, correctFeedback) {
       const selected = document.querySelector(`input[name="${questionName}"]:checked`);
@@ -822,6 +1022,81 @@
       const feedbackBox = document.getElementById(`feedback-${questionName}`);
       feedbackBox.className = "feedback-box";
       feedbackBox.textContent = "";
+    }
+
+    async function submitReadingFeedback(event) {
+      event.preventDefault();
+
+      const formData = new FormData(feedbackForm);
+      const helpfulSupport = formData.get("helpful_support") || "";
+      const popupHelpfulness = formData.get("popup_helpfulness") || "";
+      const deviceType = formData.get("device_type") || "";
+      const missingWords = (formData.get("missing_words") || "").trim();
+      const suggestions = (formData.get("suggestions") || "").trim();
+
+      const payload = {
+        lesson_id: "3.4",
+        lesson_title: "Lesson 3.4 Smart Reading",
+        conversation_id: "lesson-3-4-smart-reading",
+        student_name: (formData.get("student_name") || "").trim(),
+        english_first_helpful: helpfulSupport,
+        preferred_mode: popupHelpfulness,
+        current_play_mode: deviceType || "unknown_device",
+        current_speed: "smart_reading_page",
+        comments:
+          `Helpful support: ${helpfulSupport || "N/A"}\n` +
+          `Word pop-up helpfulness: ${popupHelpfulness || "N/A"}\n` +
+          `Missing words: ${missingWords || "None"}\n` +
+          `Suggestions: ${suggestions || "None"}`,
+        user_agent: navigator.userAgent
+      };
+
+      if (!payload.english_first_helpful || !payload.preferred_mode) {
+        feedbackStatus.className = "feedback-submit-status show error";
+        feedbackStatus.textContent = "Please complete the required questions before submitting.";
+        return;
+      }
+
+      feedbackStatus.className = "feedback-submit-status show";
+      feedbackStatus.textContent = "Submitting...";
+
+      try {
+        const response = await fetch(`${SUPABASE_URL}/rest/v1/${FEEDBACK_TABLE}`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "apikey": SUPABASE_ANON,
+            "Authorization": `Bearer ${SUPABASE_ANON}`,
+            "Prefer": "return=minimal"
+          },
+          body: JSON.stringify(payload)
+        });
+
+        if (!response.ok) {
+          const errorText = await response.text();
+          throw new Error(errorText || "Submission failed.");
+        }
+
+        feedbackStatus.className = "feedback-submit-status show success";
+        feedbackStatus.textContent = "Thank you! Your feedback has been submitted.";
+        feedbackForm.reset();
+      } catch (error) {
+        console.error(error);
+        feedbackStatus.className = "feedback-submit-status show error";
+        feedbackStatus.textContent = "Sorry, the feedback could not be submitted yet. Please check your Supabase settings and table permissions.";
+      }
+    }
+
+    if (feedbackForm) {
+      feedbackForm.addEventListener("submit", submitReadingFeedback);
+    }
+
+    if (resetFeedbackBtn) {
+      resetFeedbackBtn.addEventListener("click", () => {
+        feedbackForm.reset();
+        feedbackStatus.className = "feedback-submit-status";
+        feedbackStatus.textContent = "";
+      });
     }
   </script>
 </body>
