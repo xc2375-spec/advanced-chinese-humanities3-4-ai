@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Reading Fluency | 3.4 成语故事二则</title>
+  <title>Reading Fluency | 3.4 天衣无缝</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <style>
     :root{
@@ -52,8 +52,42 @@
     .small{font-size:12px;color:var(--muted)}
     .feedback-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
     @media(max-width:700px){.feedback-grid{grid-template-columns:1fr}}
-    .radio-row{display:flex;gap:12px;flex-wrap:wrap;padding-top:4px}
-    .radio-row label{display:flex;align-items:center;gap:6px;font-weight:500;margin:0;color:var(--text)}
+
+    .radio-row{
+      display:grid;
+      grid-template-columns:repeat(3, minmax(0, 1fr));
+      gap:10px;
+      padding-top:6px;
+    }
+
+    .radio-row label{
+      display:flex;
+      align-items:flex-start;
+      gap:8px;
+      font-weight:500;
+      margin:0;
+      color:var(--text);
+      border:1px solid var(--line);
+      background:#faf9f6;
+      border-radius:10px;
+      padding:10px 12px;
+      min-height:48px;
+      line-height:1.45;
+      cursor:pointer;
+    }
+
+    .radio-row input[type="radio"]{
+      width:auto;
+      margin:2px 0 0;
+      flex:0 0 auto;
+    }
+
+    @media(max-width:700px){
+      .radio-row{
+        grid-template-columns:1fr;
+      }
+    }
+
     .btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
     button.primary,button.secondary{border:none;border-radius:10px;padding:10px 14px;cursor:pointer;font-weight:700}
     .primary{background:var(--accent);color:#fff}
@@ -69,19 +103,12 @@
     <div class="topbar"><a href="index.html">← 首页</a><span>/</span><span>Reading Fluency</span></div>
 
     <section class="box title">
-      <h1>3.4 成语故事二则</h1>
+      <h1>3.4 天衣无缝</h1>
       <p>Listen to the full audio: English once, then Chinese twice. Follow along with the text and shadow the Chinese.</p>
     </section>
 
     <section class="box">
       <div class="controls">
-        <div>
-          <label for="conversation-select">选择内容</label>
-          <select id="conversation-select">
-            <option value="a">A · 天衣无缝</option>
-            <option value="b">B · 胸有成竹</option>
-          </select>
-        </div>
         <div>
           <label for="speed-select">Speed</label>
           <select id="speed-select">
@@ -102,7 +129,7 @@
           <button class="speed-btn active" data-rate="1">1.0x</button>
           <button class="speed-btn" data-rate="1.1">1.1x</button>
         </div>
-        <div class="mini-note">Put <strong>3-4-a-full.mp3</strong> and <strong>3-4-b-full.mp3</strong> in the same folder as this HTML file.</div>
+        <div class="mini-note">Put <strong>3-4-a-full.mp3</strong> in the same folder as this HTML file.</div>
       </div>
     </section>
 
@@ -115,12 +142,6 @@
         <span>Full audio corresponds to this section</span>
       </div>
       <div class="line-list" id="main-line-list"></div>
-
-      <div class="section-head">
-        <h3>Bonus Practice</h3>
-        <span>Read aloud after the main dialogue</span>
-      </div>
-      <div class="line-list" id="extension-line-list"></div>
     </section>
 
     <section class="box">
@@ -146,18 +167,18 @@
       <div style="margin-top:12px">
         <label>Was English-first helpful?</label>
         <div class="radio-row">
-          <label><input type="radio" name="english_helpful" value="Yes"> Yes</label>
-          <label><input type="radio" name="english_helpful" value="A little"> A little</label>
-          <label><input type="radio" name="english_helpful" value="No"> No</label>
+          <label><input type="radio" name="english_helpful" value="Yes"><span>Yes</span></label>
+          <label><input type="radio" name="english_helpful" value="A little"><span>A little</span></label>
+          <label><input type="radio" name="english_helpful" value="No"><span>No</span></label>
         </div>
       </div>
 
       <div style="margin-top:12px">
         <label>Did the full-dialogue audio help your fluency?</label>
         <div class="radio-row">
-          <label><input type="radio" name="full_audio_helpful" value="Yes"> Yes</label>
-          <label><input type="radio" name="full_audio_helpful" value="A little"> A little</label>
-          <label><input type="radio" name="full_audio_helpful" value="No"> No</label>
+          <label><input type="radio" name="full_audio_helpful" value="Yes"><span>Yes</span></label>
+          <label><input type="radio" name="full_audio_helpful" value="A little"><span>A little</span></label>
+          <label><input type="radio" name="full_audio_helpful" value="No"><span>No</span></label>
         </div>
       </div>
 
@@ -179,63 +200,29 @@
     const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBtdWZ3ZGFvbHV0dXhoZGxhaWF3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQyMjU0ODEsImV4cCI6MjA4OTgwMTQ4MX0.VwnKCfzw3iIuCM3Cz4oCdX3vhoVHqwlk0dnkv9Lk2gY';
     const FEEDBACK_TABLE = 'reading_fluency_feedback';
 
-    const CONVERSATIONS = {
-      a: {
-        lessonId: '3.4-a',
-        title: '对话 A · 天衣无缝',
-        scene: 'Scene: 两个同学一起排练话剧，演出前在后台聊天',
-        audio: '3-4-a-full.mp3',
-        mainLines: [
-          { no: 1, speaker: '小芳', en: "Xiao Fang: I'm so nervous. What if I forget my lines on stage?", zh: '小芳：我好紧张。万一上台以后忘词了怎么办？' },
-          { no: 2, speaker: '小明', en: "Xiao Ming: Relax. We've rehearsed so many times — our coordination is absolutely seamless.", zh: '小明：别紧张嘛。我们排练了这么多次，配合已经天衣无缝了。' },
-          { no: 3, speaker: '小芳', en: "Xiao Fang: But today is different — there's a real audience. I can't sleep well at night recently.", zh: '小芳：可今天不一样，有真正的观众。我最近晚上都睡不好觉。' },
-          { no: 4, speaker: '小明', en: "Xiao Ming: That's totally normal. But think about it — we've been rehearsing for six weeks. Every line, every move, we've gone over them again and again.", zh: '小明：这很正常。但你想想——我们已经排练了六个星期。每一句台词，每一个动作，都一遍遍地练过了。' },
-          { no: 5, speaker: '小芳', en: "Xiao Fang: That's true. Our script is solid, and there are basically no weak points the audience could find fault with.", zh: '小芳：说得也是。我们的剧本很周密，基本上没有什么破绽让观众挑毛病。' },
-          { no: 6, speaker: '小明', en: "Xiao Ming: Exactly. And if you really do forget a line, I'll cover for you right away. Our cooperation will be seamless.", zh: '小明：就是嘛。而且你真要是忘词了，我马上帮你接上。我们的合作一定天衣无缝。' },
-          { no: 7, speaker: '小芳', en: "Xiao Fang: You always know how to make people feel at ease. Alright, let's do this!", zh: '小芳：你总是能让人心情舒畅。好，我们上吧！' },
-          { no: 8, speaker: '小明', en: "Xiao Ming: Go for it! This performance is going to be perfect — absolutely flawless!", zh: '小明：加油！这次演出一定非常完美——天衣无缝！' }
-        ],
-        extensionLines: [
-          { no: 9, speaker: '扩展', en: 'His plan was so meticulous that nobody could find any flaw in it at all.', zh: '他的计划非常周密，任何人都找不到一点儿破绽。' },
-          { no: 10, speaker: '扩展', en: 'Although it was their first time collaborating, the two of them worked together seamlessly.', zh: '虽然是第一次合作，两个人的配合却天衣无缝。' },
-          { no: 11, speaker: '扩展', en: 'When writing an essay, you should try to make the logic tight and flawless, leaving no obvious weak points.', zh: '写文章的时候，要尽量让逻辑严密，天衣无缝，不留明显的破绽。' },
-          { no: 12, speaker: '扩展', en: "The police discovered a flaw in the suspect's alibi — his story wasn't seamless at all.", zh: '警察发现了嫌疑人不在场证明的破绽——他的故事根本不是天衣无缝的。' }
-        ]
-      },
-      b: {
-        lessonId: '3.4-b',
-        title: '对话 B · 胸有成竹',
-        scene: 'Scene: 期末考试前一天，宿舍里两个同学的对话',
-        audio: '3-4-b-full.mp3',
-        mainLines: [
-          { no: 1, speaker: '小林', en: "Xiao Lin: It's the last night before the exam and I haven't finished reviewing! I'm so anxious I want to cry.", zh: '小林：考试前最后一晚了，我还没复习完！焦虑得想哭。' },
-          { no: 2, speaker: '小云', en: "Xiao Yun: How come? You've been reviewing for two weeks. You know all the key vocabulary and sentence patterns.", zh: '小云：怎么会呢？你复习了两个星期了。重点词汇和句型你都掌握了啊。' },
-          { no: 3, speaker: '小林', en: "Xiao Lin: But what if I draw a topic I'm not familiar with? My mind might go blank.", zh: '小林：但万一抽到不熟悉的题目怎么办？脑子可能会一片空白。' },
-          { no: 4, speaker: '小云', en: "Xiao Yun: Look at me — I'm completely calm. Because I've been fully prepared. I'm totally confident going into this exam.", zh: '小云：你看我——我完全不慌。因为我准备充分了。考这次试，我胸有成竹。' },
-          { no: 5, speaker: '小林', en: "Xiao Lin: How did you get so prepared? I feel like I reviewed the same things as you!", zh: '小林：你是怎么准备得这么充分的？感觉我复习的东西和你差不多啊！' },
-          { no: 6, speaker: '小云', en: "Xiao Yun: It's not just about reviewing. I also did lots of practice tests, so I know exactly what kind of mistakes I make.", zh: '小云：不只是复习。我还做了很多模拟题，所以我清楚地知道自己会犯什么错误。' },
-          { no: 7, speaker: '小林', en: "Xiao Lin: No wonder you're so calm. That's the real preparation — you've got the whole thing figured out already.", zh: '小林：难怪你这么沉着。这才叫真正的准备——你已经胸有成竹了。' },
-          { no: 8, speaker: '小云', en: "Xiao Yun: You've got a solid foundation too. Stop panicking and get a good night's sleep — that's the most important thing right now.", zh: '小云：你的基础也不差。别慌了，好好睡一觉——这才是现在最重要的事。' },
-          { no: 9, speaker: '小林', en: "Xiao Lin: You're right. Staying up all night to cram isn't actually useful.", zh: '小林：你说得对。临时抱佛脚其实没什么用。' },
-          { no: 10, speaker: '小云', en: "Xiao Yun: Exactly. If you study hard throughout the year, you'll walk into the exam confident and ready.", zh: '小云：就是嘛。平时认真学，考试的时候自然胸有成竹。' }
-        ],
-        extensionLines: [
-          { no: 11, speaker: '扩展', en: 'She has been practicing this piano piece for half a year. She was completely confident walking onto the stage.', zh: '这首钢琴曲她练了半年了。走上舞台的时候，她胸有成竹。' },
-          { no: 12, speaker: '扩展', en: 'Before the interview, he had done thorough research on the company — he walked in with complete confidence.', zh: '面试前，他对这家公司做了充分的研究——进去的时候胸有成竹。' },
-          { no: 13, speaker: '扩展', en: 'Only when you have truly put in the preparation can you face any challenge calmly and confidently.', zh: '只有真正做好了准备，才能沉着自信地面对任何挑战。' },
-          { no: 14, speaker: '扩展', en: 'He said he had no idea how the competition would go — but actually, anyone could see he was fully ready.', zh: '他说不知道比赛会怎么样——但其实谁都能看出来他胸有成竹。' }
-        ]
-      }
+    const CONVERSATION = {
+      lessonId: '3.4-a',
+      title: '对话 A · 天衣无缝',
+      scene: 'Scene: 两个同学一起排练话剧，演出前在后台聊天',
+      audio: '3-4-a-full.mp3',
+      mainLines: [
+        { no: 1, speaker: '小芳', en: "Xiao Fang: I'm so nervous. What if I forget my lines on stage?", zh: '小芳：我好紧张。万一上台以后忘词了怎么办？' },
+        { no: 2, speaker: '小明', en: "Xiao Ming: Relax. We've rehearsed so many times — our coordination is absolutely seamless.", zh: '小明：别紧张嘛。我们排练了这么多次，配合已经天衣无缝了。' },
+        { no: 3, speaker: '小芳', en: "Xiao Fang: But today is different — there's a real audience. I can't sleep well at night recently.", zh: '小芳：可今天不一样，有真正的观众。我最近晚上都睡不好觉。' },
+        { no: 4, speaker: '小明', en: "Xiao Ming: That's totally normal. But think about it — we've been rehearsing for six weeks. Every line, every move, we've gone over them again and again.", zh: '小明：这很正常。但你想想——我们已经排练了六个星期。每一句台词，每一个动作，都一遍遍地练过了。' },
+        { no: 5, speaker: '小芳', en: "Xiao Fang: That's true. Our script is solid, and there are basically no weak points the audience could find fault with.", zh: '小芳：说得也是。我们的剧本很周密，基本上没有什么破绽让观众挑毛病。' },
+        { no: 6, speaker: '小明', en: "Xiao Ming: Exactly. And if you really do forget a line, I'll cover for you right away. Our cooperation will be seamless.", zh: '小明：就是嘛。而且你真要是忘词了，我马上帮你接上。我们的合作一定天衣无缝。' },
+        { no: 7, speaker: '小芳', en: "Xiao Fang: You always know how to make people feel at ease. Alright, let's do this!", zh: '小芳：你总是能让人心情舒畅。好，我们上吧！' },
+        { no: 8, speaker: '小明', en: "Xiao Ming: Go for it! This performance is going to be perfect — absolutely flawless!", zh: '小明：加油！这次演出一定非常完美——天衣无缝！' }
+      ]
     };
 
-    const conversationSelect = document.getElementById('conversation-select');
     const speedSelect = document.getElementById('speed-select');
     const audioEl = document.getElementById('full-audio');
     const audioSource = document.getElementById('audio-source');
     const titleEl = document.getElementById('conversation-title');
     const sceneEl = document.getElementById('scene');
     const mainLineList = document.getElementById('main-line-list');
-    const extensionLineList = document.getElementById('extension-line-list');
     const speedBtns = [...document.querySelectorAll('.speed-btn')];
     const resultBox = document.getElementById('result-box');
 
@@ -261,22 +248,16 @@
       });
     }
 
-    function renderConversation(key){
-      const convo = CONVERSATIONS[key];
-      if (!convo) return;
-
-      titleEl.textContent = convo.title;
-      sceneEl.textContent = convo.scene;
-      mainLineList.innerHTML = (convo.mainLines || []).map(renderLine).join('');
-      extensionLineList.innerHTML = (convo.extensionLines || []).map(renderLine).join('');
-
+    function renderConversation(){
+      titleEl.textContent = CONVERSATION.title;
+      sceneEl.textContent = CONVERSATION.scene;
+      mainLineList.innerHTML = (CONVERSATION.mainLines || []).map(renderLine).join('');
       audioEl.pause();
-      audioSource.src = convo.audio;
+      audioSource.src = CONVERSATION.audio;
       audioEl.load();
       setRate(speedSelect.value || '1');
     }
 
-    conversationSelect.addEventListener('change', e => renderConversation(e.target.value));
     speedSelect.addEventListener('change', e => setRate(e.target.value));
     speedBtns.forEach(btn => btn.addEventListener('click', () => setRate(btn.dataset.rate)));
 
@@ -296,21 +277,14 @@
       const englishFirstHelpful = getRadioValue('english_helpful');
       const fullAudioHelpful = getRadioValue('full_audio_helpful');
       const comments = document.getElementById('comments').value.trim();
-      const selectedKey = conversationSelect.value;
-      const convo = CONVERSATIONS[selectedKey];
-
-      if(!convo){
-        showResult('error', 'Conversation data is missing.');
-        return;
-      }
 
       try{
         const client = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
         const payload = {
           student_name: studentName || null,
-          lesson_id: convo.lessonId,
-          lesson_title: '3.4 成语故事二则',
-          conversation_id: selectedKey,
+          lesson_id: CONVERSATION.lessonId,
+          lesson_title: '3.4 天衣无缝',
+          conversation_id: 'a',
           english_first_helpful: englishFirstHelpful || null,
           pace_rating: paceRating ? Number(paceRating) : null,
           naturalness_rating: null,
@@ -343,7 +317,7 @@
     document.getElementById('submit-feedback-btn').addEventListener('click', submitFeedback);
     document.getElementById('clear-feedback-btn').addEventListener('click', clearFeedback);
 
-    renderConversation('a');
+    renderConversation();
     setRate('1');
   </script>
 </body>
